@@ -1,30 +1,50 @@
 import React from "react";
-import {Button} from "@mui/material";
-import {useDispatch} from "react-redux";
-import {removeCartItem, updateCartItem} from "../../Redux/Customers/Cart/Action";
-import {IconButton} from "@mui/material";
+import { Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { removeCartItem, updateCartItem, getCart } from "../../Redux/Customers/Cart/Action";
+import { IconButton } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import  {API_BASE_URL} from "../../Config/api";
-const CartItem = ({item, showButton}) => {
+import { API_BASE_URL } from "../../Config/api";
+const CartItem = ({ item, showButton }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
 
-    const handleRemoveItemFromCart = () => {
-        const data = {cartItemId: item?.id, jwt};
-        dispatch(removeCartItem(data));
+    // const handleRemoveItemFromCart = () => {
+    //     const data = { cartItemId: item?.id, jwt };
+    //     dispatch(removeCartItem(data)).unwrap();
+    //     dispatch(getCart(jwt));
+
+    // };
+    const handleRemoveItemFromCart = async () => {
+        try {
+            const data = { cartItemId: item?.id, jwt };
+            // Remove unwrap() since the action isn't created with createAsyncThunk
+            await dispatch(removeCartItem(data));
+            // Fetch updated cart data after removal
+            dispatch(getCart(jwt));
+        } catch (error) {
+            console.error("Error removing item:", error);
+        }
     };
-    const handleUpdateCartItem = (num) => {
-        const data = {data: {quantity: item.quantity + num}, cartItemId: item?.id, jwt}
-        dispatch(updateCartItem(data))
-    }
+
+    const handleUpdateCartItem = async (num) => {
+        try {
+            const data = { data: { quantity: item.quantity + num }, cartItemId: item?.id, jwt };
+            await dispatch(updateCartItem(data));
+            dispatch(getCart(jwt)); // Thêm dòng này để cập nhật UI
+        } catch (error) {
+            console.error("Error updating item quantity:", error);
+        }
+    };
+
     return (
         <div className="p-5 shadow-lg border rounded-md">
             <div className="flex items-center">
                 <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
                     <img
                         className="w-full h-full object-cover object-top"
-                        src={ `${API_BASE_URL}${item?.firstImageUrl}`}
+                        src={`${API_BASE_URL}${item?.firstImageUrl}`}
                         alt=""
                     />
                 </div>
@@ -35,10 +55,10 @@ const CartItem = ({item, showButton}) => {
                     <div className="flex space-x-2 items-center pt-3">
                         <p className="opacity-50 line-through">{item?.laptopPrice} VND</p>
                         <p className="font-semibold text-lg">
-                            {item?.laptopPrice*(100-item?.discountPercent)/100} VND
+                            {item?.laptopPrice * (100 - item?.discountPercent) / 100} VND
                         </p>
                         <p className="text-green-600 font-semibold">
-                            {item?.discountPercent}% 
+                            {item?.discountPercent}%
                         </p>
                     </div>
                 </div>
@@ -46,13 +66,13 @@ const CartItem = ({item, showButton}) => {
             {showButton && <div className="lg:flex items-center lg:space-x-10 pt-4">
                 <div className="flex items-center space-x-2 ">
                     <IconButton onClick={() => handleUpdateCartItem(-1)} disabled={item?.quantity <= 1} color="primary"
-                                aria-label="add an alarm">
-                        <RemoveCircleOutlineIcon/>
+                        aria-label="add an alarm">
+                        <RemoveCircleOutlineIcon />
                     </IconButton>
 
                     <span className="py-1 px-7 border rounded-sm">{item?.quantity}</span>
                     <IconButton onClick={() => handleUpdateCartItem(1)} color="primary" aria-label="add an alarm">
-                        <AddCircleOutlineIcon/>
+                        <AddCircleOutlineIcon />
                     </IconButton>
                 </div>
                 <div className="flex text-sm lg:text-base mt-5 lg:mt-0">

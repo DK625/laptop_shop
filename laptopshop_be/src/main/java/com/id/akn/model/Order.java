@@ -25,7 +25,8 @@ public class Order {
 	@OneToMany(mappedBy="order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> orderItems= new ArrayList<>();
 
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "shipping_address_id")
 	private Address shippingAddress;
 
 	@Column(name="total_price")

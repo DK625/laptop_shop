@@ -1,20 +1,20 @@
-import {useState, useRef} from "react";
-import {RadioGroup} from "@headlessui/react";
-import {useNavigate, useParams} from "react-router-dom";
+import { useState, useRef } from "react";
+import { RadioGroup } from "@headlessui/react";
+import { useNavigate, useParams } from "react-router-dom";
 import LaptopReviewCard from "./LaptopReviewCard";
-import {Box, Button, Grid, IconButton, LinearProgress, Rating} from "@mui/material";
+import { Box, Button, Grid, IconButton, LinearProgress, Rating, Alert, Snackbar } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import HomeLaptopCard from "../../Home/HomeLaptopCard";
-import {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {findLaptopById} from "../../../Redux/Admin/Laptop/Action";
-import {addItemToCart} from "../../../Redux/Customers/Cart/Action";
-import {getAllReviews} from "../../../Redux/Customers/Review/Action";
-import {gounsPage1} from "../../../Data/Gouns/gouns";
-import {API_BASE_URL} from "../../../Config/api";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { findLaptopById } from "../../../Redux/Admin/Laptop/Action";
+import { addItemToCart } from "../../../Redux/Customers/Cart/Action";
+import { getAllReviews } from "../../../Redux/Customers/Review/Action";
+import { gounsPage1 } from "../../../Data/Gouns/gouns";
+import { API_BASE_URL } from "../../../Config/api";
 
-const reviews = {href: "#", average: 4, totalCount: 117};
+const reviews = { href: "#", average: 4, totalCount: 117 };
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
@@ -22,18 +22,27 @@ function classNames(...classes) {
 export default function LaptopDetails() {
     const scrollRef = useRef(null);
     const [activeImage, setActiveImage] = useState(null);
-    const [quantity, setQuantity] = useState(1); 
+    const [quantity, setQuantity] = useState(1);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {laptop} = useSelector((store) => store.laptop);
-    const {laptopId} = useParams();
+    const { laptop } = useSelector((store) => store.laptop);
+    const { laptopId } = useParams();
     const jwt = localStorage.getItem("jwt");
+    const [openAlert, setOpenAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertSeverity, setAlertSeverity] = useState("success");
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAlert(false);
+    };
 
     useEffect(() => {
         // if (laptop?.laptopColors?.length > 0 ) {
         //     setSelectedColor(laptop.laptopColors[0]);
         // }
-        const data = {laptopId: Number(laptopId), jwt};
+        const data = { laptopId: Number(laptopId), jwt };
         dispatch(findLaptopById(data));
         dispatch(getAllReviews(laptopId));
     }, [laptopId]);
@@ -55,23 +64,58 @@ export default function LaptopDetails() {
     const handleQuantityChange = (num) => {
         setQuantity((prev) => Math.max(1, prev + num)); // Ensure quantity is at least 1
     };
-    const handleSubmit = () => {
-        const data = {laptopId:Number(laptopId) , colorId: selectedColor.colorId,quantity};
-        dispatch(addItemToCart({data, jwt}));
-        navigate("/cart");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const data = {
+                laptopId: Number(laptopId),
+                colorId: selectedColor.colorId,
+                quantity
+            };
+            const result = await dispatch(addItemToCart({ data, jwt }));
+            // console.log('result: ', result)
+
+            // if (result.error) {
+            //     setAlertSeverity("error");
+            //     setAlertMessage("Thêm vào giỏ hàng thất bại!");
+            // } else {
+            setAlertSeverity("success");
+            setAlertMessage("Thêm vào giỏ hàng thành công!");
+            // }
+            setOpenAlert(true);
+        } catch (error) {
+            console.log('error: ', error)
+            setAlertSeverity("error");
+            setAlertMessage("Đã xảy ra lỗi khi thêm vào giỏ hàng!");
+            setOpenAlert(true);
+        }
     };
     const scroll = (direction) => {
         const container = scrollRef.current;
         if (container) {
-          const scrollAmount = 200; // Khoảng cách cuộn mỗi lần
-          container.scrollLeft += direction === "left" ? -scrollAmount : scrollAmount;
+            const scrollAmount = 200; // Khoảng cách cuộn mỗi lần
+            container.scrollLeft += direction === "left" ? -scrollAmount : scrollAmount;
         }
-      };
+    };
 
-  
+
 
     return (
         <div className="bg-white lg:px-20">
+            <Snackbar
+                open={openAlert}
+                autoHideDuration={2000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alertSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
             <div className="pt-6">
                 {/* laptop details */}
                 <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 pt-10">
@@ -121,7 +165,7 @@ export default function LaptopDetails() {
                                     -{laptop?.discountPercent}%
                                 </p>
                                 <p className="font-semibold">
-                                    {laptop?.price*(100-laptop?.discountPercent)/100} VND
+                                    {laptop?.price * (100 - laptop?.discountPercent) / 100} VND
                                 </p>
                             </div>
 
@@ -129,7 +173,7 @@ export default function LaptopDetails() {
                             <div className="mt-6">
                                 <h3 className="sr-only">Reviews</h3>
                                 <div className="flex items-center space-x-3">
-                                    <Rating name="read-only" value={4.6} precision={0.5} readOnly/>
+                                    <Rating name="read-only" value={4.6} precision={0.5} readOnly />
                                     <p className="opacity-60 text-sm">42807 Ratings</p>
                                     <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                                         {reviews.totalCount} reviews
@@ -199,7 +243,7 @@ export default function LaptopDetails() {
                                         <AddCircleOutlineIcon />
                                     </IconButton>
                                 </div>
-                                <Button variant="contained" type="submit" sx={{padding: ".8rem 2rem", marginTop: "2rem"}}>
+                                <Button variant="contained" type="submit" sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}>
                                     Add To Cart
                                 </Button>
                             </form>
@@ -255,7 +299,7 @@ export default function LaptopDetails() {
                             <Grid item xs={5}>
                                 <h1 className="text-xl font-semibold pb-1">Laptop Ratings</h1>
                                 <div className="flex items-center space-x-3 pb-10">
-                                    <Rating name="read-only" value={4.6} precision={0.5} readOnly/>
+                                    <Rating name="read-only" value={4.6} precision={0.5} readOnly />
                                     <p className="opacity-60">42807 Ratings</p>
                                 </div>
                                 <Box>
@@ -265,7 +309,7 @@ export default function LaptopDetails() {
                                         </Grid>
                                         <Grid xs={7}>
                                             <LinearProgress className="" variant="determinate" value={40} color="success"
-                                                sx={{bgcolor: "#d0d0d0", borderRadius: 4, height: 7}}
+                                                sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                                             />
                                         </Grid>
                                         <Grid xs={2}>
@@ -280,7 +324,7 @@ export default function LaptopDetails() {
                                         </Grid>
                                         <Grid xs={7}>
                                             <LinearProgress className="" variant="determinate" value={30} color="success"
-                                                sx={{bgcolor: "#d0d0d0", borderRadius: 4, height: 7}}
+                                                sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                                             />
                                         </Grid>
                                         <Grid xs={2}>
@@ -295,7 +339,7 @@ export default function LaptopDetails() {
                                         </Grid>
                                         <Grid xs={7}>
                                             <LinearProgress className="bg-[#885c0a]" variant="determinate" value={25} color="orange"
-                                                sx={{bgcolor: "#d0d0d0", borderRadius: 4, height: 7}}
+                                                sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                                             />
                                         </Grid>
                                         <Grid xs={2}>
@@ -329,7 +373,7 @@ export default function LaptopDetails() {
                                             <p className="p-0">Poor</p>
                                         </Grid>
                                         <Grid xs={7}>
-                                            <LinearProgress className="" sx={{bgcolor: "#d0d0d0", borderRadius: 4, height: 7}}
+                                            <LinearProgress className="" sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                                                 variant="determinate" value={10} color="error"
                                             />
                                         </Grid>

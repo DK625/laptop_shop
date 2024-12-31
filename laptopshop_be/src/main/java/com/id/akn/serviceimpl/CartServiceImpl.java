@@ -70,6 +70,7 @@ public class CartServiceImpl implements CartService {
 			return convertToDTO(managedCartItem);
 		}else{
 			newQuantity += isPresent.getQuantity();
+			isPresent.setQuantity((short) newQuantity);
 			if(newQuantity >= currentQuantity) {
 				newQuantity = currentQuantity;
 			}
