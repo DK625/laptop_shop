@@ -10,6 +10,10 @@ import com.id.akn.repository.*;
 import com.id.akn.request.CartItemDTO;
 import com.id.akn.request.OrderDTO;
 import com.id.akn.service.*;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -90,8 +94,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<Order> userOrdersHistory(Long userId)  {
-		return orderRepository.getUserOrders(userId);
+	public Page<Order> userOrdersHistory(Long userId, Order.PaymentStatus paymentStatus, int page, int size)  {
+		Pageable pageable = PageRequest.of(page - 1, size);
+		if (paymentStatus != null) {
+			return orderRepository.findByPaymentStatusAndUserId(paymentStatus, userId, pageable);
+		} else {
+			return orderRepository.findByUserId(userId, pageable);
+		}
 	}
 
 	@Override
@@ -164,6 +173,23 @@ public class OrderServiceImpl implements OrderService {
 		}
 		order.setPaymentStatus(status);
 		orderRepository.save(order);
+	}
+
+	@Transactional
+	@Override
+	public Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus orderStatus) throws OrderException {
+		int rowsAffected = orderRepository.updateOrderStatus(orderId, userId, orderStatus);
+		if (rowsAffected > 0) {
+			return orderRepository.findById(orderId).orElseThrow(() -> new OrderException("Order not found."));
+		} else {
+			throw new OrderException("Order not found or user not authorized to update this order.");
+		}
+	}
+
+	@Transactional
+	@Override
+	public void deleteOrder(Long orderId, Long userId) {
+		orderRepository.deleteById(orderId);
 	}
 
 }
