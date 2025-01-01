@@ -4,15 +4,10 @@ import java.util.List;
 
 import com.id.akn.exception.*;
 import com.id.akn.request.OrderDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.id.akn.model.Address;
 import com.id.akn.model.Order;
@@ -48,11 +43,13 @@ public class OrderController {
 	}
 
 	@GetMapping("/user")
-	public ResponseEntity< List<Order>> userOrdersHistoryHandler(@RequestHeader("Authorization") 
-	String jwt) throws OrderException, UserException{
+	public ResponseEntity<Page<Order>> userOrdersHistoryHandler(@RequestHeader("Authorization") String jwt,
+																 @RequestParam(value = "status", required = false) Order.PaymentStatus paymentStatus,
+																 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+																 @RequestParam(value = "size", required = false, defaultValue = "10") int size) throws UserException{
 		
 		User user=userService.findUserProfileByJwt(jwt);
-		List<Order> orders = orderService.userOrdersHistory(user.getId());
+		Page<Order> orders = orderService.userOrdersHistory(user.getId(), paymentStatus, page, size);
 		return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
 	}
 	
@@ -64,4 +61,24 @@ public class OrderController {
 		return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
 	}
 
+	@PutMapping("/{orderId}")
+	public ResponseEntity<Order> updateOrderStatus(
+			@RequestHeader("Authorization") String jwt,
+			@PathVariable Long orderId,
+			@RequestParam Order.OrderStatus orderStatus
+	) throws OrderException, UserException {
+		User user = userService.findUserProfileByJwt(jwt);
+		Order updatedOrder = orderService.updateOrderStatus(orderId, user.getId(), orderStatus);
+		return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{orderId}")
+	public ResponseEntity<Void> deleteOrder(
+			@RequestHeader("Authorization") String jwt,
+			@PathVariable Long orderId
+	) throws OrderException, UserException {
+		User user = userService.findUserProfileByJwt(jwt);
+		orderService.deleteOrder(orderId, user.getId());
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

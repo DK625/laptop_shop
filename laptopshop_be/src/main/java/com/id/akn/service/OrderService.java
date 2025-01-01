@@ -6,12 +6,13 @@ import com.id.akn.exception.*;
 import com.id.akn.model.Order;
 import com.id.akn.model.User;
 import com.id.akn.request.OrderDTO;
+import org.springframework.data.domain.Page;
 
 public interface OrderService {
 	Order createOrder(User user, OrderDTO orderDTO) throws CartItemException, UserException, LaptopException, ColorException;
 	Order findOrderById(Long orderId) throws OrderException;
 	//Order findOrderByOrderId(String orderId) throws OrderException;
-	List<Order> userOrdersHistory(Long userId);
+	Page<Order> userOrdersHistory(Long userId, Order.PaymentStatus paymentStatus, int page, int size);
 	Order confirmedOrder(Long orderId) throws OrderException;
 	Order shippedOrder(Long orderId) throws OrderException;
 	Order deliveredOrder(Long orderId) throws OrderException;
@@ -19,4 +20,6 @@ public interface OrderService {
 	List<Order> getAllOrders();
 	void deleteOrder(Long orderId) throws OrderException;
 	void updatePaymentStatus(Long txnRef, Order.PaymentStatus status) throws OrderException;
+	Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus newStatus) throws OrderException;
+	void deleteOrder(Long orderId, Long userId) throws OrderException;
 }

@@ -56,7 +56,7 @@ public class Laptop {
 	@Column(name = "screen_detail", nullable = false)
 	private String screenDetail;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "os_version_id")
     private OsVersion osVersion;
 
