@@ -1,11 +1,11 @@
 package com.id.akn.serviceimpl;
 
+import com.id.akn.model.Category;
 import com.id.akn.model.Order;
+import com.id.akn.repository.LaptopRepository;
 import com.id.akn.repository.OrderRepository;
-import com.id.akn.response.MonthlyRevenueDTO;
-import com.id.akn.response.ProductRevenuePercentageDTO;
-import com.id.akn.response.YearlyRevenueDTO;
-import com.id.akn.response.YearlyRevenueRes;
+import com.id.akn.repository.UserRepository;
+import com.id.akn.response.*;
 import com.id.akn.service.RevenueStatisticsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 public class RevenueStatisticsServiceImpl implements RevenueStatisticsService {
 
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final LaptopRepository laptopRepository;
 
     @Override
     public List<YearlyRevenueRes> calculateTotalRevenuePerYear() {
@@ -69,14 +71,27 @@ public class RevenueStatisticsServiceImpl implements RevenueStatisticsService {
         Map<String, Double> productRevenue = orders.stream()
                 .flatMap(order -> order.getOrderItems().stream())
                 .collect(Collectors.groupingBy(
-                        orderItem -> orderItem.getLaptop().getModel(),
+                        orderItem -> orderItem.getLaptop().getCategories().stream()
+                                .map(Category::getName)
+                                .findFirst()
+                                .orElse("Unknown"),
                         Collectors.summingDouble(item -> item.getLaptop().getPrice() * item.getQuantity())
                 ));
 
-        double totalRevenue = orders.stream().mapToDouble(Order::getTotalPrice).sum();
+        double totalRevenue = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .mapToDouble(item -> item.getLaptop().getPrice() * item.getQuantity())
+                .sum();
 
         return productRevenue.entrySet().stream()
                 .map(entry -> new ProductRevenuePercentageDTO(entry.getKey(), (entry.getValue() / totalRevenue) * 100))
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public BudgetRes getBudgetRes() {
+        BudgetRes budgetRes = new BudgetRes(userRepository.totalUser(), orderRepository.getTotalRevenue(), laptopRepository.getTotalProduct(), orderRepository.getTotalOrder());
+        return budgetRes;
     }
 }

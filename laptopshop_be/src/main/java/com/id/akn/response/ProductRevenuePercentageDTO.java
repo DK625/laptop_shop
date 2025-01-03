@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProductRevenuePercentageDTO {
-    private String productName;
+    private String categoryName;
     private Double percentage;
 }

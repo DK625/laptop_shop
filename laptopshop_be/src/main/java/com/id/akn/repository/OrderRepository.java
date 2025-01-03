@@ -33,10 +33,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
 	@Modifying
-	@Query("UPDATE Order o SET o.orderStatus = :orderStatus WHERE o.id = :orderId AND o.user.id = :userId")
+	@Query("UPDATE Order o SET o.orderStatus = :orderStatus, o.paymentStatus = :paymentStatus WHERE o.id = :orderId AND o.user.id = :userId")
 	int updateOrderStatus(@Param("orderId") Long orderId,
 						  @Param("userId") Long userId,
-						  @Param("orderStatus") Order.OrderStatus orderStatus);
+						  @Param("orderStatus") Order.OrderStatus orderStatus,
+						  @Param("paymentStatus") Order.PaymentStatus paymentStatus);
 
 	Optional<Order> findByIdAndUserId(Long orderId, Long userId);
+
+	@Query(value = "SELECT SUM(total_price) FROM tbl_order", nativeQuery = true)
+	Double getTotalRevenue();
+
+	@Query(value = "SELECT COUNT(*) FROM tbl_order", nativeQuery = true)
+	Long getTotalOrder();
 }

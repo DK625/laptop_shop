@@ -33,20 +33,19 @@ public class LaptopController {
 
 	@GetMapping("/filter")
 	public ResponseEntity<Page<LaptopDTO>> findLaptopByCategoryHandler(
-			@RequestParam (required = false)List<String> brands,
+			@RequestParam(required = false) List<String> colors,
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String gpuType,
-			@RequestParam (required = false) List<String> cpuTechnologies,
-			@RequestParam (required = false) List<Byte> ramMemory,
-			@RequestParam (required = false) List<Short> diskCapacity,
-			@RequestParam (required = false) List<Float> screenSize,
+			@RequestParam(required = false) Float discountPercentMin,
+			@RequestParam(required = false) Float discountPercentMax,
+			@RequestParam(required = false) List<Float> screenSize,
 			@RequestParam(required = false) Long minPrice,
 			@RequestParam(required = false) Long maxPrice,
+			@RequestParam(required = false) Short stockStatus,
+			@RequestParam(required = false) String sortPrice,
 			Pageable pageable) {
 
 		Page<LaptopDTO> laptops = laptopService.getAllLaptop(
-				brands, category, gpuType, cpuTechnologies, ramMemory, diskCapacity, screenSize, minPrice, maxPrice, pageable);
-		System.out.println("SQL excute here:");
+				colors, category, discountPercentMin, discountPercentMax, screenSize, minPrice, maxPrice, stockStatus, sortPrice, pageable);
 		return ResponseEntity.ok(laptops);
 	}
 
