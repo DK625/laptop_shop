@@ -46,7 +46,6 @@ public class LaptopController {
 
 		Page<LaptopDTO> laptops = laptopService.getAllLaptop(
 				brands, category, gpuType, cpuTechnologies, ramMemory, diskCapacity, screenSize, minPrice, maxPrice, pageable);
-		System.out.println("SQL excute here:");
 		return ResponseEntity.ok(laptops);
 	}
 
