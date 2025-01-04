@@ -39,4 +39,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 						  @Param("orderStatus") Order.OrderStatus orderStatus);
 
 	Optional<Order> findByIdAndUserId(Long orderId, Long userId);
+
+	@Query(value = "SELECT SUM(total_price) FROM tbl_order", nativeQuery = true)
+	Double getTotalRevenue();
+
+	@Query(value = "SELECT COUNT(*) FROM tbl_order", nativeQuery = true)
+	Long getTotalOrder();
 }

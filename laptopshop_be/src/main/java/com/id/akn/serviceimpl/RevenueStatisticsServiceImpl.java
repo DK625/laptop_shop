@@ -1,11 +1,10 @@
 package com.id.akn.serviceimpl;
 
 import com.id.akn.model.Order;
+import com.id.akn.repository.LaptopRepository;
 import com.id.akn.repository.OrderRepository;
-import com.id.akn.response.MonthlyRevenueDTO;
-import com.id.akn.response.ProductRevenuePercentageDTO;
-import com.id.akn.response.YearlyRevenueDTO;
-import com.id.akn.response.YearlyRevenueRes;
+import com.id.akn.repository.UserRepository;
+import com.id.akn.response.*;
 import com.id.akn.service.RevenueStatisticsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,8 @@ import java.util.stream.Collectors;
 public class RevenueStatisticsServiceImpl implements RevenueStatisticsService {
 
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final LaptopRepository laptopRepository;
 
     @Override
     public List<YearlyRevenueRes> calculateTotalRevenuePerYear() {
@@ -78,5 +79,11 @@ public class RevenueStatisticsServiceImpl implements RevenueStatisticsService {
         return productRevenue.entrySet().stream()
                 .map(entry -> new ProductRevenuePercentageDTO(entry.getKey(), (entry.getValue() / totalRevenue) * 100))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BudgetRes getBudgetRes() {
+        BudgetRes budgetRes = new BudgetRes(userRepository.totalUser(), orderRepository.getTotalRevenue(), laptopRepository.getTotalProduct(), orderRepository.getTotalOrder());
+        return budgetRes;
     }
 }

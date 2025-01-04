@@ -2,6 +2,7 @@ package com.id.akn.serviceimpl;
 
 import com.id.akn.exception.*;
 import com.id.akn.model.*;
+import com.id.akn.repository.LaptopColorRepository;
 import com.id.akn.repository.LaptopRepository;
 import com.id.akn.request.CartItemDTO;
 import com.id.akn.request.CpuDTO;
@@ -29,6 +30,7 @@ public class CartServiceImpl implements CartService {
 	private LaptopService laptopService;
 	private ColorService colorService;
 	private LaptopRepository laptopRepository;
+	private LaptopColorRepository laptopColorRepository;
 	
 	@Override
 	public Cart createCart(User user) {
@@ -88,11 +90,11 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public List<CartItemDTO> findUserCart(Long userId) {
 		Optional<Cart> cart = Optional.ofNullable(cartRepository.findByUserId(userId));
-		System.out.println(cart );
 		return cartRepository.findByUserId(userId).getCartItems().stream()
 				.map(this::convertToDTO).collect(Collectors.toList());
 	}
 	public CartItemDTO convertToDTO(CartItem cartItem) {
+
 		CartItemDTO cartItemDTO = new CartItemDTO();
 		// Set basic fields
 		cartItemDTO.setId(cartItem.getId());
@@ -104,6 +106,9 @@ public class CartServiceImpl implements CartService {
 		cartItemDTO.setColorName(cartItem.getColor().getName());
 		cartItemDTO.setQuantity(cartItem.getQuantity());
 
+		LaptopColor laptopColor = laptopColorRepository.findByLaptopId(cartItem.getLaptop().getId());
+		cartItemDTO.setStock(laptopColor.getQuantity());
+
 		// Get the first image URL
 		Set<String> imageUrls = cartItem.getLaptop().getImageUrls(); // Assuming this method exists
 		if (imageUrls != null && !imageUrls.isEmpty()) {
@@ -113,7 +118,6 @@ public class CartServiceImpl implements CartService {
 		} else {
 			cartItemDTO.setFirstImageUrl(null);
 		}
-
 
 		return cartItemDTO;
 	}
