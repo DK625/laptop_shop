@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {getOrderById} from "../../Redux/Customers/Order/Action";
 import AddressCard from "../Address/AddressCard";
 import {createPayment} from "../../Redux/Customers/Payment/Action";
+import axios from "axios";
+import { createUrLPayment } from "../../until/common";
 
 const OrderSummary = () => {
     const navigate = useNavigate();
@@ -23,10 +25,16 @@ const OrderSummary = () => {
         dispatch(getOrderById(orderId))
     }, [orderId])
 
-    const handleCreatePayment = () => {
+    const handleCreatePayment = async () => {
+        const  url = await createUrLPayment(order.order?.totalDiscountedPrice, order.order?.id)
+        if(url){
+            window.location.href = url
+        }
         const data = {orderId: order.order?.id, jwt}
         dispatch(createPayment(data))
     }
+
+console.log("cls-linh", order);
 
     return (
         <div className="space-y-5">

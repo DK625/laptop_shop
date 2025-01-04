@@ -45,7 +45,8 @@ const CustomerRoutes = () => {
         { path: "/account/order/:orderId", element: <OrderDetails /> },
         { path: "/account/rate/:laptopId", element: <RateLaptop /> },
         { path: "/checkout", element: <Checkout /> },
-        { path: "/payment/:orderId", element: <PaymentSuccess /> },
+        // { path: "/payment/:orderId", element: <PaymentSuccess /> },
+        { path: "/payment/success", element: <PaymentSuccess /> },
         { path: "/*", element: <NotFound /> }
     ];
 
