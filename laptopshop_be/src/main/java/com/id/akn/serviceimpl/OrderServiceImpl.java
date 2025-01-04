@@ -180,8 +180,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	@Override
-	public Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus orderStatus) throws OrderException {
-		int rowsAffected = orderRepository.updateOrderStatus(orderId, userId, orderStatus);
+	public Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus orderStatus, Order.PaymentStatus paymentStatus) throws OrderException {
+		int rowsAffected = orderRepository.updateOrderStatus(orderId, userId, orderStatus, paymentStatus);
 		if (rowsAffected > 0) {
 			return orderRepository.findById(orderId).orElseThrow(() -> new OrderException("Order not found."));
 		} else {

@@ -20,6 +20,6 @@ public interface OrderService {
 	List<Order> getAllOrders();
 	void deleteOrder(Long orderId) throws OrderException;
 	void updatePaymentStatus(Long txnRef, Order.PaymentStatus status) throws OrderException;
-	Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus newStatus) throws OrderException;
+	Order updateOrderStatus(Long orderId, Long userId, Order.OrderStatus newStatus, Order.PaymentStatus paymentStatus) throws OrderException;
 	void deleteOrder(Long orderId, Long userId) throws OrderException;
 }
