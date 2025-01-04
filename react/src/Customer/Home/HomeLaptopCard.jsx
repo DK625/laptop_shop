@@ -18,8 +18,8 @@ const HomeLaptopCard = ({laptop}) => {
             </div>
             <div className="p-4 ">
                 <div className="flex items-center space-x-2">
-                    <p className="text-sm text-gray-500 line-through">{laptop?.originalPrice} VND</p>
-                    <span className="text-gray-500 font-bold">-{laptop?.discountPercent}%</span>
+                    <p className="text-sm text-gray-500 line-through">{laptop?.originalPrice?.toLocaleString('vi-VN')} VND</p>
+                    <span className="text-gray-500 font-bold">-{laptop?.discountPercent?.toLocaleString('vi-VN')}%</span>
                 </div>
                 <p className="text-black-500 font-bold">
                     {laptop?.discountedPrice} VND

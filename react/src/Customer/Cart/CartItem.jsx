@@ -38,27 +38,32 @@ const CartItem = ({ item, showButton }) => {
         }
     };
 
+    const colorName = item?.colorName ?? item.color.name
+    const laptopPrice = item?.laptopPrice ?? item.laptop.price
+    const discountPercent = item?.discountPercent ?? item.laptop.discountPercent
+    const firstImageUrl = item?.firstImageUrl ?? item.laptop.imageUrls[0]
+
     return (
         <div className="p-5 shadow-lg border rounded-md">
             <div className="flex items-center">
                 <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
                     <img
                         className="w-full h-full object-cover object-top"
-                        src={`${API_BASE_URL}${item?.firstImageUrl}`}
+                        src={`${API_BASE_URL}${firstImageUrl}`}
                         alt=""
                     />
                 </div>
                 <div className="ml-5 space-y-1">
                     <p className="font-semibold">{item?.laptopModel}</p>
-                    <p className="opacity-70">Màu: {item?.colorName}</p>
+                    <p className="opacity-70">Màu: {colorName}</p>
                     {/* <p className="opacity-70 mt-2">{item?.laptop?.brand}</p> */}
                     <div className="flex space-x-2 items-center pt-3">
-                        <p className="opacity-50 line-through">{item?.laptopPrice} VND</p>
+                        <p className="opacity-50 line-through">{laptopPrice?.toLocaleString('vi-VN')} VND</p>
                         <p className="font-semibold text-lg">
-                            {item?.laptopPrice * (100 - item?.discountPercent) / 100} VND
+                            {(laptopPrice * (100 - discountPercent) / 100)?.toLocaleString('vi-VN')} VND
                         </p>
                         <p className="text-green-600 font-semibold">
-                            {item?.discountPercent}%
+                            {discountPercent}%
                         </p>
                     </div>
                 </div>
@@ -70,7 +75,7 @@ const CartItem = ({ item, showButton }) => {
                         <RemoveCircleOutlineIcon />
                     </IconButton>
 
-                    <span className="py-1 px-7 border rounded-sm">{item?.quantity}</span>
+                    <span className="py-1 px-7 border rounded-sm">{item?.quantity + '/' }</span>
                     <IconButton onClick={() => handleUpdateCartItem(1)} color="primary" aria-label="add an alarm">
                         <AddCircleOutlineIcon />
                     </IconButton>

@@ -13,6 +13,14 @@ export default function AddDeliveryAddressForm({ handleNext }) {
   const { auth } = useSelector((store) => store);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [form, setForm] = useState({
+    "id":null,
+    "name": "",
+    "streetAddress": "",
+    "city": "",
+    "phoneNumber": ""
+});
+  
   const [paymentMethod, setPaymentMethod] = useState(""); // Không chọn mặc định
   const [error, setError] = useState(""); // Lưu thông báo lỗi
 
@@ -41,6 +49,10 @@ export default function AddDeliveryAddressForm({ handleNext }) {
     );
     handleNext();
   };
+  const handleSelectAddress = (address) => {    
+    setSelectedAddress(address);
+    setForm(address)
+  }
 
   // Tạo order với địa chỉ mới
   const handleSubmit = (event) => {
@@ -90,7 +102,7 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   size="large"
                   variant="contained"
                   color="primary"
-                  onClick={handleCreateOrderWithExistingAddress}
+                  onClick={()=>handleSelectAddress(item)}
                 >
                   Giao hàng tại đây
                 </Button>
@@ -135,6 +147,8 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   label="Họ và tên"
                   fullWidth
                   autoComplete="given-name"
+                  value={form.name}
+                  onChange={(e) => setForm({...form, name: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -145,6 +159,8 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   label="Số điện thoại"
                   fullWidth
                   autoComplete="given-name"
+                  value={form.phoneNumber}
+                  onChange={(e) => setForm({...form, phoneNumber: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -157,6 +173,8 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   autoComplete="shipping address"
                   multiline
                   rows={3}
+                  value={form.streetAddress}
+                  onChange={(e) => setForm({...form, streetAddress: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -167,6 +185,8 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   label="Thành phố"
                   fullWidth
                   autoComplete="shipping address-level2"
+                  value={form.city}
+                  onChange={(e) => setForm({...form, city: e.target.value})}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -177,7 +197,7 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   variant="contained"
                   color="primary"
                 >
-                  Giao hàng tại đây
+                  Tiếp tục
                 </Button>
               </Grid>
             </Grid>
