@@ -16,5 +16,6 @@ public class CartItemDTO {
 	private Byte colorId;
 	private String colorName;
 	private short quantity;
+	private short stock;
 	private String firstImageUrl;
 }

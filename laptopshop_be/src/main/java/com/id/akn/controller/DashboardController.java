@@ -2,6 +2,7 @@ package com.id.akn.controller;
 
 import com.id.akn.exception.UserException;
 import com.id.akn.model.User;
+import com.id.akn.response.BudgetRes;
 import com.id.akn.response.ProductRevenuePercentageDTO;
 import com.id.akn.response.YearlyRevenueDTO;
 import com.id.akn.response.YearlyRevenueRes;
@@ -40,6 +41,13 @@ public class DashboardController {
         User user = userService.findUserProfileByJwt(jwt);
         List<ProductRevenuePercentageDTO> productRevenuePercentages = revenueStatisticsService.calculateProductRevenuePercentages();
         return ResponseEntity.ok(productRevenuePercentages);
+    }
+
+    @GetMapping("/budget")
+    public ResponseEntity<BudgetRes> getTotalBudget(@RequestHeader("Authorization") String jwt) throws UserException {
+        User user = userService.findUserProfileByJwt(jwt);
+        BudgetRes budgetRes = revenueStatisticsService.getBudgetRes();
+        return ResponseEntity.ok(budgetRes);
     }
 
 }

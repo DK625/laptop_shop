@@ -12,6 +12,7 @@ import com.id.akn.model.*;
 import com.id.akn.repository.*;
 import com.id.akn.request.*;
 import com.id.akn.service.*;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -205,33 +206,35 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public Page<LaptopDTO> getAllLaptop(List<String> brands, String category, String gpuType, List<String> cpuTechnologies,
-                                        List<Byte> ramMemory, List<Short> diskCapacity, List<Float> screenSize,
-                                        Long minPrice, Long maxPrice, Pageable pageable) {
+    public Page<LaptopDTO> getAllLaptop(List<String> colors, String category, Float discountPercentMin, Float discountPercentMax, List<Float> screenSize, Long minPrice, Long maxPrice,
+                                        Short stockStatus, String sortPrice, Pageable pageable) {
 
         // Xây dựng Specification
         Specification<Laptop> specification = Specification.where(null);
 
-        specification = addCondition(specification, brands != null && !brands.isEmpty(),
-                (root, query, cb) -> root.get("brand").get("name").in(brands));
+        specification = addCondition(specification, colors != null && !colors.isEmpty(),
+                (root, query, cb) -> {
+                    Join<Object, Object> laptopColorsJoin = root.join("laptopColors");
+                    Join<Object, Object> colorJoin = laptopColorsJoin.join("color");
+                    return colorJoin.get("name").in(colors);
+                });
 
         specification = addCondition(specification, category != null,
                 (root, query, cb) -> cb.equal(root.join("categories").get("name"), category));
 
-        specification = addCondition(specification, gpuType != null,
+
+        specification = addCondition(specification, discountPercentMin != null,
+                (root, query, cb) -> cb.between(root.get("discountPercent"), discountPercentMin, discountPercentMax));
+
+        specification = addCondition(specification, stockStatus != null,
                 (root, query, cb) -> {
-                    assert gpuType != null;
-                    return cb.equal(root.join("gpus").get("type"), Gpu.Type.valueOf(gpuType.toUpperCase()));
+                    Join<Object, Object> laptopColorsJoin = root.join("laptopColors");
+                    if (stockStatus == 0) {
+                        return cb.equal(laptopColorsJoin.get("quantity"), 0);
+                    }
+                    return cb.greaterThan(laptopColorsJoin.get("quantity"), 0);
                 });
 
-        specification = addCondition(specification, cpuTechnologies != null && !cpuTechnologies.isEmpty(),
-                (root, query, cb) -> root.get("cpu").get("technology").get("name").in(cpuTechnologies));
-
-        specification = addCondition(specification, ramMemory != null && !ramMemory.isEmpty(),
-                (root, query, cb) -> root.get("ramMemory").in(ramMemory));
-
-        specification = addCondition(specification, diskCapacity != null && !diskCapacity.isEmpty(),
-                (root, query, cb) -> root.get("diskCapacity").in(diskCapacity));
 
         specification = addCondition(specification, screenSize != null && !screenSize.isEmpty(),
                 (root, query, cb) -> {
@@ -246,11 +249,16 @@ public class LaptopServiceImpl implements LaptopService {
         specification = addCondition(specification, minPrice != null && maxPrice != null,
                 (root, query, cb) -> cb.between(root.get("price"), minPrice, maxPrice));
 
-        specification = addCondition(specification, minPrice != null && maxPrice == null,
-                (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("price"), minPrice));
+        specification = addCondition(specification, sortPrice != null,
+                (root, query, cb) -> {
+                    if ("increase".equalsIgnoreCase(sortPrice)) {
+                        query.orderBy(cb.asc(root.get("price")));
+                    } else if ("decrease".equalsIgnoreCase(sortPrice)) {
+                        query.orderBy(cb.desc(root.get("price")));
+                    }
+                    return null;
+                });
 
-        specification = addCondition(specification, maxPrice != null && minPrice == null,
-                (root, query, cb) -> cb.lessThanOrEqualTo(root.get("price"), maxPrice));
 
         // Thực hiện truy vấn với Specification và Pageable
         Page<Laptop> laptopPage = laptopRepository.findAll(specification, pageable);

@@ -33,4 +33,7 @@ public interface LaptopRepository extends JpaRepository<Laptop, Integer>, JpaSpe
 
     @Query("SELECT l FROM Laptop l ORDER BY l.discountPercent DESC")
     List<Laptop> findTop10ByHighestDiscount();
+
+    @Query(value = "SELECT COUNT(*) FROM laptop", nativeQuery = true)
+    Long getTotalProduct();
 }

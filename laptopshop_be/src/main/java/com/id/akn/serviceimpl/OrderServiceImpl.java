@@ -32,11 +32,13 @@ public class OrderServiceImpl implements OrderService {
 	private LaptopService laptopService;
 	private CartRepository cartRepository;
 	private ColorService colorService;
+
+	@Transactional
 	@Override
 	public Order createOrder(User user, OrderDTO orderDTO) throws UserException, LaptopException, ColorException, CartItemException {
 		orderDTO.getShippingAddress().setUser(user);
 		Address address = addressRepository.save(orderDTO.getShippingAddress());
-//		Cart cart = cartRepository.findByUserId(user.getId());
+
 		user.getAddresses().add(address);
 		userRepository.save(user);
 
@@ -85,6 +87,7 @@ public class OrderServiceImpl implements OrderService {
 			item.setOrder(savedOrder);
 			orderItemRepository.save(item);
 		}
+
 		return savedOrder;
 	}
 
