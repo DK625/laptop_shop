@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deepPurple } from "@mui/material/colors";
 import { getUser, logout } from "../../Redux/Auth/Action";
 import { getCart } from "../../Redux/Customers/Cart/Action";
+import './index.css'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -27,6 +28,7 @@ export default function Navigation() {
     const { auth, cart } = useSelector((store) => store);
     const [openAuthModal, setOpenAuthModal] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isScrolled, setIsScrolled] = useState(false);
     const openUserMenu = Boolean(anchorEl);
     const jwt = localStorage.getItem("jwt");
     const location = useLocation();
@@ -65,6 +67,23 @@ export default function Navigation() {
             navigate(-1);
         }
     }, [auth.user]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 50) {
+            setIsScrolled(true);
+          } else {
+            setIsScrolled(false);
+          }
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+    
+        // Cleanup khi component unmount
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, []);
 
     const handleLogout = () => {
         handleCloseUserMenu();
@@ -246,10 +265,7 @@ export default function Navigation() {
                 </Dialog>
             </Transition.Root>
 
-            <header className="relative bg-white">
-                <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-
-                </p>
+            <header className={`${isScrolled ? "fixed animation-slide-down w-full" : "relative"} z-50 bg-white`}>
 
                 <nav aria-label="Top" className="mx-auto">
                     <div className="border-b border-gray-200">
@@ -276,7 +292,7 @@ export default function Navigation() {
                             </div>
 
                             {/* Flyout menus */}
-                            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-10">
+                            {/* <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-10">
                                 <div className="flex h-full space-x-8">
                                     {navigation.categories.map((category) => (
                                         <Popover key={category.name} className="flex">
@@ -306,7 +322,6 @@ export default function Navigation() {
                                                     >
                                                         <Popover.Panel
                                                             className="absolute inset-x-0 top-full text-sm text-gray-500">
-                                                            {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                                                             <div
                                                                 className="absolute inset-0 top-1/2 bg-white shadow"
                                                                 aria-hidden="true"
@@ -360,7 +375,6 @@ export default function Navigation() {
                                                                                     >
                                                                                         {section.name}
                                                                                     </p>
-                                                                                    {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                                                                                     <ul
                                                                                         role="list"
                                                                                         aria-labelledby={`${section.name}-heading`}
@@ -410,7 +424,7 @@ export default function Navigation() {
                                         </a>
                                     ))}
                                 </div>
-                            </Popover.Group>
+                            </Popover.Group> */}
 
                             <div className="ml-auto flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">

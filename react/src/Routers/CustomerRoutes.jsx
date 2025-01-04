@@ -53,7 +53,7 @@ const CustomerRoutes = () => {
         <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
             <ThemeProvider theme={customerTheme}>
                 {showNavigation && <Navigation/>}
-                <div style={{flex: 1}}> {/* Chiếm khoảng trống ở giữa */}
+                <div className="min-h-screen" style={{flex: 1}}> {/* Chiếm khoảng trống ở giữa */}
                     <Routes>
                         {routes.map(({path, element}, index) => (
                             <Route key={index} path={path} element={element}/>
