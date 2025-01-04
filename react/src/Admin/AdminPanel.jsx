@@ -129,7 +129,7 @@ export default function AdminPanel() {
                 <Box className="adminContainer" component="main" sx={{flexGrow: 1}}>
                     <Toolbar/>
                     <Routes>
-                        {/*<Route path="/" element={ <Dashboard />}></Route>*/}
+                        <Route path="/" element={ <Dashboard />}></Route>
                         <Route path="/laptop/create" element={<CreateLaptopForm/>}></Route>
                         {/*<Route path="/laptop/update/:laptopId" element={<UpdateLaptopForm/>}></Route>*/}
                         <Route path="/laptops" element={<LaptopsTable/>}></Route>
