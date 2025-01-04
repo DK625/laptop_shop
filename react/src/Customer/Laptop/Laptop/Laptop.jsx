@@ -70,12 +70,12 @@ export default function Laptop() {
     const [minPrice, maxPrice] = price === null ? [0, 0] : price.split("-").map(Number);
     const data = {
       category: param.lavelThree,
-      colors: colorValue || [],
-      sizes: sizeValue || [],
+      // colors: colorValue || [],
+      // sizes: sizeValue || [],
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 10000,
       minDiscount: disccount || 0,
-      sort: sortValue || "price_low",
+      sortPrice: sortValue || "increase",
       pageNumber: pageNumber - 1,
       pageSize: 10,
       stock: stock,

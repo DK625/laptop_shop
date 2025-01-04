@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import image_centered_icon from '../../image_centered_icon.png';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem, TextField } from "@mui/material";
 import { navigation } from "../../Config/navigationMenu";
 import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +29,7 @@ export default function Navigation() {
     const [openAuthModal, setOpenAuthModal] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [inputValue, setInputValue] = useState("");
     const openUserMenu = Boolean(anchorEl);
     const jwt = localStorage.getItem("jwt");
     const location = useLocation();
@@ -58,6 +59,12 @@ export default function Navigation() {
         navigate(`/${category.id}/${section.id}/${item.id}`);
         close();
     };
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            navigate(`/laptops/search?search=${inputValue}`);
+        }
+      };
 
     useEffect(() => {
         if (auth.user) {
@@ -95,6 +102,8 @@ export default function Navigation() {
             ? navigate("/admin")
             : navigate("/account/order");
     };
+
+
 
     return (
         <div className="bg-white pb-10">
@@ -269,7 +278,7 @@ export default function Navigation() {
 
                 <nav aria-label="Top" className="mx-auto">
                     <div className="border-b border-gray-200">
-                        <div className="flex h-16 items-center px-11">
+                        <div className="flex h-16 items-center justify-between px-11">
                             <button
                                 type="button"
                                 className="rounded-md bg-white p-2 text-gray-400 lg:hidden"
@@ -289,6 +298,16 @@ export default function Navigation() {
                                         className="h-8 w-8 mr-2"
                                     />
                                 </Link>
+                            </div>
+
+                            <div className="">
+                                <input type="text" 
+                                id="first_name" 
+                                className="w-[50vw] max-w-2xl bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Search" 
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                 />
                             </div>
 
                             {/* Flyout menus */}
@@ -426,7 +445,7 @@ export default function Navigation() {
                                 </div>
                             </Popover.Group> */}
 
-                            <div className="ml-auto flex items-center">
+                            <div className="flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                     {auth?.user ? (
                                         <div>
@@ -482,7 +501,7 @@ export default function Navigation() {
                                 </div>
 
                                 {/* Search */}
-                                <div className="flex items-center lg:ml-6">
+                                {/* <div className="flex items-center lg:ml-6">
 
                                     <p onClick={() => navigate("/laptops/search")}
                                         className="p-2 text-gray-400 hover:text-gray-500">
@@ -493,7 +512,7 @@ export default function Navigation() {
                                             aria-hidden="true"
                                         />
                                     </p>
-                                </div>
+                                </div> */}
 
                                 {/* Cart */}
                                 <div className="ml-4 flow-root lg:ml-6">

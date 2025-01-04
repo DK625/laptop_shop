@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 
 const OrderCard = ({ item, order }) => {
+  console.log("cls-linh-order1",item, order);
+  
   const navigate = useNavigate();
   console.log("items ", item,order,order.orderStatus);
   return (
@@ -18,43 +20,26 @@ const OrderCard = ({ item, order }) => {
           >
             <img
               className="w-[5rem] h-[5rem] object-cover object-top"
-              src={item?.laptop.imageUrl}
+              src={item?.laptop.imageUrls[0]}
               alt=""
             />
             <div className="ml-5">
-              <p className="mb-2">{item?.laptop.title}</p>
+              <p className="mb-2">{item?.laptop.model}</p>
               <p className="opacity-50 text-xs font-semibold space-x-5">
-                <span>Size: {item?.size}</span>
+                <span>Size: {item?.quantity}</span>
+                <span>Payment status: {order.paymentStatus}</span>
               </p>
             </div>
           </div>
         </Grid>
 
         <Grid item xs={2}>
-          <p>₹{item?.price}</p>
+          <p>{((100 - item.laptop?.discountPercent)*item.laptop?.price/100)?.toLocaleString('vi-VN')} VND</p>
         </Grid>
         <Grid item xs={4}>
           <p className="space-y-2 font-semibold">
-            {order?.orderStatus === "DELIVERED"? (
-             <>
-             <FiberManualRecordIcon
-                  sx={{ width: "15px", height: "15px" }}
-                  className="text-green-600 p-0 mr-2 text-sm"
-                />
-                <span>Delivered On Mar 03</span>
-
-            </>
-            ):  <>
-               
-                <AdjustIcon
-                sx={{ width: "15px", height: "15px" }}
-                className="text-green-600 p-0 mr-2 text-sm"
-              />
-              <span>Expected Delivery On Mar 03</span>
-              </>}
-            
+           <div>{order?.orderStatus}</div>
           </p>
-          <p className="text-xs">Your Item Has Been Delivered</p>
           {item.orderStatus === "DELIVERED" && (
             <div
               onClick={() => navigate(`/account/rate/{id}`)}

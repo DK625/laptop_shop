@@ -75,7 +75,7 @@ const CartItem = ({ item, showButton }) => {
                         <RemoveCircleOutlineIcon />
                     </IconButton>
 
-                    <span className="py-1 px-7 border rounded-sm">{item?.quantity + '/' }</span>
+                    <span className="py-1 px-7 border rounded-sm">{item?.quantity + '/' + item?.stock }</span>
                     <IconButton onClick={() => handleUpdateCartItem(1)} color="primary" aria-label="add an alarm">
                         <AddCircleOutlineIcon />
                     </IconButton>

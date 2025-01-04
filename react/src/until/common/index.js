@@ -35,7 +35,7 @@ async function createUrLPayment(amount, id) {
     orderCode: generateRandomNumber(),
     amount: 2000,
     description: id,
-    cancelUrl: "http://localhost:3000/payment/payment-cancel",
+    cancelUrl: "http://localhost:3000/account/order",
     returnUrl: "http://localhost:3000/payment/success",
   };
 

@@ -59,11 +59,11 @@ console.log("cls-linh", order);
                         <div className="space-y-3 font-semibold">
                             <div className="flex justify-between pt-3 text-black ">
                                 <span>Price ({order.order?.totalItem} item)</span>
-                                <span>₹{order.order?.totalPrice}</span>
+                                <span>{order.order?.totalPrice.toLocaleString('vi-VN')} VND</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Discount</span>
-                                <span className="text-green-700">-₹{order.order?.discounte}</span>
+                                <span className="text-green-700">{(order.order?.totalDiscountedPrice - order.order?.totalPrice).toLocaleString('vi-VN')} VND</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Delivery Charges</span>
@@ -72,7 +72,7 @@ console.log("cls-linh", order);
                             <hr/>
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total Amount</span>
-                                <span className="text-green-700">₹{order.order?.totalDiscountedPrice}</span>
+                                <span className="text-green-700">{order.order?.totalDiscountedPrice.toLocaleString('vi-VN')} VND</span>
                             </div>
                         </div>
 
