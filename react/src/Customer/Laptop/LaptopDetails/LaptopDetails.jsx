@@ -9,7 +9,7 @@ import HomeLaptopCard from "../../Home/HomeLaptopCard";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { findLaptopById } from "../../../Redux/Admin/Laptop/Action";
-import { addItemToCart } from "../../../Redux/Customers/Cart/Action";
+import { addItemToCart, getCart } from "../../../Redux/Customers/Cart/Action";
 import { getAllReviews } from "../../../Redux/Customers/Review/Action";
 import { gounsPage1 } from "../../../Data/Gouns/gouns";
 import { API_BASE_URL } from "../../../Config/api";
@@ -73,6 +73,7 @@ export default function LaptopDetails() {
                 quantity
             };
             const result = await dispatch(addItemToCart({ data, jwt }));
+            dispatch(getCart(jwt))
             // console.log('result: ', result)
 
             // if (result.error) {

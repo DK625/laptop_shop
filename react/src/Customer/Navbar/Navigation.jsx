@@ -493,7 +493,7 @@ export default function Navigation() {
                                         />
                                         <span
                                             className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                                            {cart.cart?.totalItem || 0}
+                                            {cart.cart?.length || 0}
                                         </span>
                                         <span className="sr-only">items in cart, view bag</span>
                                     </Button>
