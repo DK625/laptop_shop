@@ -65,7 +65,7 @@ public class OrderController {
 	public ResponseEntity<Order> updateOrderStatus(
 			@RequestHeader("Authorization") String jwt,
 			@PathVariable Long orderId,
-			@RequestParam Order.OrderStatus orderStatus,
+			@RequestParam(required = false) Order.OrderStatus orderStatus,
 			@RequestParam(required = false) Order.PaymentStatus paymentStatus
 	) throws OrderException, UserException {
 		User user = userService.findUserProfileByJwt(jwt);
