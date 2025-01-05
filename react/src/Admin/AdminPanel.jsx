@@ -34,9 +34,9 @@ const menu = [
     {name: "Laptops", path: "/admin/laptops"},
     {name: "Customers", path: "/admin/customers"},
     {name: "Orders", path: "/admin/orders"},
-    {name: "Total Earnings", path: "/admin"},
-    {name: "Weekly Overview", path: "/admin"},
-    {name: "Monthly Overview", path: "/admin"}
+    // {name: "Total Earnings", path: "/admin"},
+    // {name: "Weekly Overview", path: "/admin"},
+    // {name: "Monthly Overview", path: "/admin"}
 ];
 
 export default function AdminPanel() {
@@ -68,7 +68,7 @@ export default function AdminPanel() {
                 ))}
             </List>
 
-            <List sx={{position: "absolute", bottom: 0, width: "100%"}}>
+            {/* <List sx={{position: "absolute", bottom: 0, width: "100%"}}>
                 <Divider/>
                 {["Account", "Request"].map((text, index) => (
                     <ListItem key={text} disablePadding>
@@ -80,7 +80,7 @@ export default function AdminPanel() {
                         </ListItemButton>
                     </ListItem>
                 ))}
-            </List>
+            </List> */}
         </Box>
     );
 
