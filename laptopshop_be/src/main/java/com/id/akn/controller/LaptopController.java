@@ -33,11 +33,11 @@ public class LaptopController {
 
 	@GetMapping("/filter")
 	public ResponseEntity<Page<LaptopDTO>> findLaptopByCategoryHandler(
-			@RequestParam (required = false) List<String> colors,
+			@RequestParam(required = false) List<String> colors,
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) Float discountPercentMin,
 			@RequestParam(required = false) Float discountPercentMax,
-			@RequestParam (required = false) List<Float> screenSize,
+			@RequestParam(required = false) List<Float> screenSize,
 			@RequestParam(required = false) Long minPrice,
 			@RequestParam(required = false) Long maxPrice,
 			@RequestParam(required = false) Short stockStatus,
