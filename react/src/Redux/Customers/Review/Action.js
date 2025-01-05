@@ -35,10 +35,14 @@ export const getAllReviews = (laptopId) => {
     return async (dispatch) => {
         try {
             const response = await api.get(`/api/reviews/laptop/${laptopId}`);
+            const responseRating = await api.get(`/api/ratings/laptop/${laptopId}`);
+            const ratings = responseRating.data
+
+            const data = response.data.map((item,index)=>({...item, rating:ratings[index].rating}))
 
             dispatch({
                 type: GET_ALL_REVIEWS_SUCCESS,
-                payload: response.data
+                payload: data
             });
             console.log("all review ", response.data)
         } catch (error) {

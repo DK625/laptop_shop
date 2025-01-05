@@ -12,7 +12,8 @@ import { findLaptopById } from "../../../Redux/Admin/Laptop/Action";
 import { addItemToCart, getCart } from "../../../Redux/Customers/Cart/Action";
 import { getAllReviews } from "../../../Redux/Customers/Review/Action";
 import { gounsPage1 } from "../../../Data/Gouns/gouns";
-import { API_BASE_URL } from "../../../Config/api";
+import api, { API_BASE_URL } from "../../../Config/api";
+import axios from "axios";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 function classNames(...classes) {
@@ -26,6 +27,7 @@ export default function LaptopDetails() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { laptop } = useSelector((store) => store.laptop);
+    const reviewStore = useSelector((store) => store.review);
     const { laptopId } = useParams();
     const jwt = localStorage.getItem("jwt");
     const [openAlert, setOpenAlert] = useState(false);
@@ -104,6 +106,26 @@ export default function LaptopDetails() {
         review:0
     });
     
+    const handleSubmitReview = async () => {
+        if(newReview.des  !== ''){
+            const res = await api.post('/api/reviews/create',{
+                "laptopId":parseInt(laptopId),
+                "review":newReview.des
+            })
+            
+            await api.post('/api/ratings/create',{
+                "laptopId":parseInt(laptopId),
+                "rating":newReview.review
+            })
+            if(res){
+                setNewReview({
+                    des:'',
+                    review:0
+                })
+                dispatch(getAllReviews(laptopId));
+            }
+        }
+    }
 
 
 
@@ -290,11 +312,13 @@ export default function LaptopDetails() {
                     <h1 className="font-semibold text-lg pb-4">
                         Nhận xét và đánh giá
                     </h1>
-                    <div>
+
+                        <div className="flex flex-col mb-10 max-w-[400px]">
+
                         <TextField className="mb-4" 
                         value={newReview.des} 
-                        onChange={(e,v)=>{
-                            setNewReview(pre=>({...pre,des:v}))
+                        onChange={(e)=>{
+                            setNewReview(pre=>({...pre,des:e.target.value}))
                         }} 
                         placeholder="Thêm nhận xét của bạn"/>
                         <Rating
@@ -303,22 +327,28 @@ export default function LaptopDetails() {
                             onChange={(event, v) => {
                                 setNewReview(pre=>({...pre,review:v}))
                             }}
-                        />
-                    </div>
+                            />
+                        <button className="px-4 py-1 max-w-[80px] cursor-pointer bg-blue-400 rounded-lg text-white" 
+                        onClick={handleSubmitReview}>Gửi</button>
+                            </div>
+
                     <div className="border p-5 rounded-md mt-3">
                         <Grid container spacing={7}>
                             <Grid item xs={7}>
                                 <div className="space-y-5">
-                                    {laptop?.reviews?.length > 0 ? (
-                                        laptop.reviews.map((item, i) => (
-                                            <LaptopReviewCard key={i} item={item} />
+                                    {reviewStore?.reviews ? (
+                                        reviewStore?.reviews.map((item, i) => (
+                                            <div>
+
+                                                <LaptopReviewCard key={i} item={item} />
+                                            </div>
                                         ))
                                     ) : (
                                         <p className="text-gray-500">Không có đánh giá nào cho sản phẩm này</p>
                                     )}
                                 </div>
                             </Grid>
-                            <Grid item xs={5}>
+                            {/* <Grid item xs={5}>
                                 <h1 className="text-xl font-semibold pb-1">Laptop Ratings</h1>
                                 <div className="flex items-center space-x-3 pb-10">
                                     <Rating name="read-only" value={4.6} precision={0.5} readOnly />
@@ -404,7 +434,7 @@ export default function LaptopDetails() {
                                         </Grid>
                                     </Grid>
                                 </Box>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </div>
                 </section>

@@ -15,7 +15,7 @@ const LaptopReviewCard = ({item}) => {
               alt={item.user.firstName}
               src=""
             >
-              {item.user.firstName[0].toUpperCase()}
+              {item.user.name.toUpperCase()}
             </Avatar>
           </Box>
         </Grid>
@@ -23,19 +23,17 @@ const LaptopReviewCard = ({item}) => {
           <div className="space-y-2">
             <div className="">
               <p className="font-semibold text-lg">{item.user.firstName}</p>
-              <p className="opacity-70">April 5, 2023</p>
+              <p className="opacity-70">{(new Date(item.createdAt).toLocaleDateString('vi-VN'))}</p>
             </div>
             <div>
             
 
               <Rating
-                value={value}
+                value={item.rating}
                 onChange={(event, newValue) => {
                   setValue(newValue);
                 }}
                 name="half-rating"
-                defaultValue={2.5}
-                precision={0.5}
               />
              
             </div>
