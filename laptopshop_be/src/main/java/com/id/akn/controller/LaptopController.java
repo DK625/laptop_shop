@@ -67,20 +67,20 @@ public class LaptopController {
 	}
 
 	@PostMapping(value = "/api/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LaptopDTO> createLaptop(@Valid @RequestBody LaptopDTO laptopDTO)
+	public ResponseEntity<LaptopDTO> createLaptop(@Valid @RequestBody(required = false) LaptopDTO laptopDTO)
             throws LaptopException, OsVersionException, BrandException, CpuException, ColorException {
 			return ResponseEntity.status(HttpStatus.CREATED).body(laptopService.createLaptop(laptopDTO));
     }
 
 	@PostMapping(value = "/api/admin/{laptopId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<LaptopDTO> uploadLaptopImages(@PathVariable Integer laptopId, @RequestParam("files") Set<MultipartFile> files)
+	public ResponseEntity<LaptopDTO> uploadLaptopImages(@PathVariable Integer laptopId, @RequestParam(value = "files", required = false) Set<MultipartFile> files)
             throws IOException, OsVersionException, BrandException, CpuException, LaptopException, ColorException {
 		LaptopDTO updatedProduct = laptopService.saveLaptopImages(laptopId, files);
 		return ResponseEntity.accepted().body(updatedProduct);
 	}
 
 	@PutMapping("/api/admin/{id}")
-	public ResponseEntity<LaptopDTO> updateLaptop(@PathVariable Integer id, @Valid @RequestBody LaptopDTO laptopDTO)
+	public ResponseEntity<LaptopDTO> updateLaptop(@PathVariable Integer id, @Valid @RequestBody(required = false) LaptopDTO laptopDTO)
             throws LaptopException, OsVersionException, BrandException, CpuException, IOException, ColorException {
 			return ResponseEntity.accepted().body(laptopService.updateLaptop(id, laptopDTO));
     }
@@ -91,5 +91,6 @@ public class LaptopController {
 			laptopService.deleteLaptop(id);
 			return ResponseEntity.accepted().build();
     }
+
 
 }
