@@ -40,7 +40,7 @@ def get_image_names_from_db(indices):
     return results
 
 
-def get_books_from_images(image_names):
+def get_laptops_from_images(image_names):
     from app.model import Book
     books = []
     try:

@@ -3,7 +3,7 @@ from app.services.data_service import (
     get_embedding_from_file,
     search_similar_images,
     get_image_names_from_db,
-    get_books_from_images,
+    get_laptops_from_images,
 )
 import tensorflow as tf
 import faiss
@@ -28,7 +28,8 @@ def search_books():
     indices = search_similar_images(embedding, index, k=5)
 
     image_names = get_image_names_from_db(indices)
+    print('image_names: ', image_names)
 
-    books = get_books_from_images(image_names)
+    books = get_laptops_from_images(image_names)
 
     return jsonify(books)

@@ -77,16 +77,19 @@ async def process_image(img_name, model, index, db_conn, image_folder):
 
 # Hàm chính để xử lý tất cả ảnh và lưu trữ embedding
 async def main():
+    static_dir  = os.path.dirname(os.path.abspath(__file__))
+
     # Kết nối SQLite
-    async with aiosqlite.connect('image_embeddings.db') as db_conn:
+    db_path = os.path.join(static_dir, 'image_embeddings.db')
+    async with aiosqlite.connect(db_path) as db_conn:
         await db_conn.execute('''
-            CREATE TABLE IF NOT EXISTS embeddings (
-                id INTEGER PRIMARY KEY,
-                image_name TEXT,
-                embedding BLOB,
-                faiss_id INTEGER
-            )
-        ''')
+                CREATE TABLE IF NOT EXISTS embeddings (
+                    id INTEGER PRIMARY KEY,
+                    image_name TEXT,
+                    embedding BLOB,
+                    faiss_id INTEGER
+                )
+            ''')
         await db_conn.commit()
 
         # Đường dẫn đến thư mục chứa các hình ảnh
@@ -101,11 +104,12 @@ async def main():
         tasks = [process_image(img_name, model, index, db_conn, image_folder) for img_name in image_files]
         await asyncio.gather(*tasks)
 
-        # Lưu FAISS index
-        faiss.write_index(index, 'faiss_index.bin')
+        # Lưu FAISS index và model trong thư mục static
+        faiss_index_path = os.path.join(static_dir, 'faiss_index.bin')
+        model_path = os.path.join(static_dir, 'embedding_model.h5')
 
-        # Lưu model
-        model.save('embedding_model.h5')
+        faiss.write_index(index, faiss_index_path)
+        model.save(model_path)
 
 # Chạy chương trình chính
 if __name__ == "__main__":
