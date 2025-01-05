@@ -27,6 +27,9 @@ public class Laptop {
 	
 	@Column(nullable = false)
 	private String model;
+
+	@Column(name = "status")
+	private Short status = 1;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cpu_id")

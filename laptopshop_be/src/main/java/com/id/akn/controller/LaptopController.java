@@ -86,7 +86,7 @@ public class LaptopController {
     }
 
 
-	@DeleteMapping("/api/admin/{id}")
+	@PutMapping("/api/delete/{id}")
 	public ResponseEntity<Void> deleteLaptop(@PathVariable Integer id) throws LaptopException, IOException{
 			laptopService.deleteLaptop(id);
 			return ResponseEntity.accepted().build();
