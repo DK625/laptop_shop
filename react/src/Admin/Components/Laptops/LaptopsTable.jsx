@@ -178,13 +178,13 @@ const LaptopsTable = () => {
                     </Box>
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.categories[0].name}
+                    {item?.categories[0]?.name}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     {item.price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.laptopColors[0].quantity}
+                    {item?.laptopColors[0]?.quantity}
                   </TableCell>
 
                   <TableCell sx={{ textAlign: "center" }}>
