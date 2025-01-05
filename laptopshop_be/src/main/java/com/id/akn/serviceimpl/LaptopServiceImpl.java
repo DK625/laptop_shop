@@ -76,6 +76,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setWarranty(laptopDTO.getWarranty());
         laptop.setPrice(laptopDTO.getPrice());
         laptop.setDiscountPercent(laptopDTO.getDiscountPercent());
+        laptop.setStatus((short) 1);
         laptop.setCategories(laptopDTO.getCategories().stream().map(category -> {
             try {
                 return categoryService.getCategoryById(category.getId());
