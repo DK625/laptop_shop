@@ -137,6 +137,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setWarranty(laptopDTO.getWarranty());
         laptop.setPrice(laptopDTO.getPrice());
         laptop.setDiscountPercent(laptopDTO.getDiscountPercent());
+        laptop.setStatus(laptopDTO.getStatus());
 
 //        Set<Gpu> updatedGpus = laptopDTO.getGpus().stream()
 //            .map(dto -> {
@@ -318,7 +319,8 @@ public class LaptopServiceImpl implements LaptopService {
                 laptop.getWarranty(),
                 laptop.getPrice(),
                 laptop.getImageUrls(),
-                laptop.getDiscountPercent()
+                laptop.getDiscountPercent(),
+                laptop.getStatus()
         );
     }
 }
