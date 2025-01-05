@@ -197,12 +197,13 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public void deleteLaptop(Integer id) throws LaptopException, IOException {
+    public void deleteLaptop(Integer id) throws LaptopException {
         if (!laptopRepository.existsById(id)) {
             throw new LaptopException("Laptop not found");
         }
-        imageStorageService.deleteLaptopDirectory(id);
-        laptopRepository.deleteById(id);
+        Laptop laptop = laptopRepository.findById(id).get();
+        laptop.setStatus((short) 0);
+        laptopRepository.saveAndFlush(laptop);
     }
 
     @Override
