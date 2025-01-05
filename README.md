@@ -1,6 +1,7 @@
 - chạy fe
     
     ```python
+  npm i
     npm start
     ```
     
