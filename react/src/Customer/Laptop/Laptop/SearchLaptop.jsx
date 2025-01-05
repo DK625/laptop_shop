@@ -39,6 +39,8 @@ export default function SearchLaptop() {
   const { laptop } = useSelector((store) => store);
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const queryParams = new URLSearchParams(location.search);  
+  const keySearch = queryParams.get('search');
 
   const handleLoderClose = () => {
     setIsLoaderOpen(false);
@@ -71,6 +73,10 @@ export default function SearchLaptop() {
       setIsLoaderOpen(false);
     }
   }, [laptop?.loading]);
+
+  useEffect(() => {
+    dispatch(searchLaptop(keySearch))
+  }, [location]);
 
   const handleSearch=(e)=>{
     const keyword=e.target.value;
@@ -191,10 +197,10 @@ export default function SearchLaptop() {
         </Transition.Root>
 
         <main className="mx-auto px-4 lg:px-14 ">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-6">
+            {/* <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               Search Laptop
-            </h1>
+            </h1> */}
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
@@ -272,12 +278,12 @@ export default function SearchLaptop() {
 
                 {/* Laptop grid */}
                 <div className=" w-full">
-                <TextField
+                {/* <TextField
                       id="outlined-basic"
                       label="Search laptop..."
                       variant="outlined"
                       onChange={handleSearch}
-                    />
+                    /> */}
                   <div className="flex flex-wrap justify-center bg-white py-5 rounded-md ">
                     {laptop?.searchLaptops?.map((item) => (
                       <LaptopCard laptop={item} />

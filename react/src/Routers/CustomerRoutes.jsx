@@ -45,7 +45,8 @@ const CustomerRoutes = () => {
         { path: "/account/order/:orderId", element: <OrderDetails /> },
         { path: "/account/rate/:laptopId", element: <RateLaptop /> },
         { path: "/checkout", element: <Checkout /> },
-        { path: "/payment/:orderId", element: <PaymentSuccess /> },
+        // { path: "/payment/:orderId", element: <PaymentSuccess /> },
+        { path: "/payment/success", element: <PaymentSuccess /> },
         { path: "/*", element: <NotFound /> }
     ];
 
@@ -53,7 +54,7 @@ const CustomerRoutes = () => {
         <div style={{display: "flex", flexDirection: "column", minHeight: "100vh"}}>
             <ThemeProvider theme={customerTheme}>
                 {showNavigation && <Navigation/>}
-                <div style={{flex: 1}}> {/* Chiếm khoảng trống ở giữa */}
+                <div className="min-h-screen" style={{flex: 1}}> {/* Chiếm khoảng trống ở giữa */}
                     <Routes>
                         {routes.map(({path, element}, index) => (
                             <Route key={index} path={path} element={element}/>

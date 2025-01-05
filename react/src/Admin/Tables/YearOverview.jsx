@@ -11,23 +11,19 @@ import ReactApexCharts from 'react-apexcharts';
 import { useEffect, useState } from 'react'
 import api from '../../Config/api'
 
-const WeeklyOverview = () => {
+const YearOverview = () => {
   const theme = useTheme();
 
   const [reportYearly, setReportYearly] = useState([]);
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [filter, setFilter] = useState({
-    year: new Date().getFullYear()
-  });
+  const [lables, setLables] = useState([]);
   
 
   useEffect(()=>{
     const getData = async ()=>{
-        const res = await api.get(`/api/dashboard/yearly?year=${filter.year}`)
-        if(res.data.year){
-          const data = res.data.monthlyRevenueList.map((item)=> item.revenue)
-          setReportYearly(data)
-          setTotalRevenue(res.data.totalRevenue)
+        const res = await api.get(`/api/dashboard/yearly-revenue`)
+        if(res.data){
+          setReportYearly(res.data.map((item)=>item.totalRevenue))
+          setLables(res.data.map((item)=>item.year))
         }
     }
     getData()
@@ -80,7 +76,7 @@ const WeeklyOverview = () => {
       }
     },
     xaxis: {
-      categories: ['Tháng 1', "Tháng 2",'Tháng 3', "Tháng 4",'Tháng 5', "Tháng 6",'Tháng 7', "Tháng 8",'Tháng 9', "Tháng 10",],
+      categories: lables,
       tickPlacement: 'on',
       labels: { show: false },
       axisTicks: { show: false },
@@ -97,9 +93,9 @@ const WeeklyOverview = () => {
   }
 
   return (
-    <Card>
+    <Card className='h-full'>
       <CardHeader
-        title={new Date().getFullYear()}
+        title='Doanh thu các năm'
         titleTypographyProps={{
           sx: { lineHeight: '0rem !important', letterSpacing: '0.15px !important' }
         }}
@@ -112,9 +108,9 @@ const WeeklyOverview = () => {
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
         <ReactApexCharts  type='bar' height={201} options={options} series={[{ data: reportYearly }]} />
         <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-          <Typography variant='h5' sx={{ mr: 4 }}>
+          {/* <Typography variant='h5' sx={{ mr: 4 }}>
             Tổng doanh thu {totalRevenue.toLocaleString()} VND
-          </Typography>
+          </Typography> */}
           {/* <Typography variant='body2'>T</Typography> */}
         </Box>
         {/* <Button fullWidth variant='contained'>
@@ -125,4 +121,4 @@ const WeeklyOverview = () => {
   )
 }
 
-export default WeeklyOverview
+export default YearOverview

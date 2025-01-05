@@ -8,13 +8,14 @@ import {
 } from "@heroicons/react/24/outline";
 import image_centered_icon from '../../image_centered_icon.png';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem, TextField } from "@mui/material";
 import { navigation } from "../../Config/navigationMenu";
 import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { deepPurple } from "@mui/material/colors";
 import { getUser, logout } from "../../Redux/Auth/Action";
 import { getCart } from "../../Redux/Customers/Cart/Action";
+import './index.css'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -27,6 +28,8 @@ export default function Navigation() {
     const { auth, cart } = useSelector((store) => store);
     const [openAuthModal, setOpenAuthModal] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [inputValue, setInputValue] = useState("");
     const openUserMenu = Boolean(anchorEl);
     const jwt = localStorage.getItem("jwt");
     const location = useLocation();
@@ -57,6 +60,12 @@ export default function Navigation() {
         close();
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            navigate(`/laptops/search?search=${inputValue}`);
+        }
+      };
+
     useEffect(() => {
         if (auth.user) {
             handleClose();
@@ -65,6 +74,23 @@ export default function Navigation() {
             navigate(-1);
         }
     }, [auth.user]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 50) {
+            setIsScrolled(true);
+          } else {
+            setIsScrolled(false);
+          }
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+    
+        // Cleanup khi component unmount
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, []);
 
     const handleLogout = () => {
         handleCloseUserMenu();
@@ -76,6 +102,8 @@ export default function Navigation() {
             ? navigate("/admin")
             : navigate("/account/order");
     };
+
+
 
     return (
         <div className="bg-white pb-10">
@@ -246,14 +274,11 @@ export default function Navigation() {
                 </Dialog>
             </Transition.Root>
 
-            <header className="relative bg-white">
-                <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-
-                </p>
+            <header className={`${isScrolled ? "fixed animation-slide-down w-full" : "relative"} z-50 bg-white`}>
 
                 <nav aria-label="Top" className="mx-auto">
                     <div className="border-b border-gray-200">
-                        <div className="flex h-16 items-center px-11">
+                        <div className="flex h-16 items-center justify-between px-11">
                             <button
                                 type="button"
                                 className="rounded-md bg-white p-2 text-gray-400 lg:hidden"
@@ -275,8 +300,18 @@ export default function Navigation() {
                                 </Link>
                             </div>
 
+                            <div className="">
+                                <input type="text" 
+                                id="first_name" 
+                                className="w-[50vw] max-w-2xl bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Search" 
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                 />
+                            </div>
+
                             {/* Flyout menus */}
-                            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-10">
+                            {/* <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-10">
                                 <div className="flex h-full space-x-8">
                                     {navigation.categories.map((category) => (
                                         <Popover key={category.name} className="flex">
@@ -306,7 +341,6 @@ export default function Navigation() {
                                                     >
                                                         <Popover.Panel
                                                             className="absolute inset-x-0 top-full text-sm text-gray-500">
-                                                            {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                                                             <div
                                                                 className="absolute inset-0 top-1/2 bg-white shadow"
                                                                 aria-hidden="true"
@@ -360,7 +394,6 @@ export default function Navigation() {
                                                                                     >
                                                                                         {section.name}
                                                                                     </p>
-                                                                                    {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                                                                                     <ul
                                                                                         role="list"
                                                                                         aria-labelledby={`${section.name}-heading`}
@@ -410,9 +443,9 @@ export default function Navigation() {
                                         </a>
                                     ))}
                                 </div>
-                            </Popover.Group>
+                            </Popover.Group> */}
 
-                            <div className="ml-auto flex items-center">
+                            <div className="flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                     {auth?.user ? (
                                         <div>
@@ -468,7 +501,7 @@ export default function Navigation() {
                                 </div>
 
                                 {/* Search */}
-                                <div className="flex items-center lg:ml-6">
+                                {/* <div className="flex items-center lg:ml-6">
 
                                     <p onClick={() => navigate("/laptops/search")}
                                         className="p-2 text-gray-400 hover:text-gray-500">
@@ -479,7 +512,7 @@ export default function Navigation() {
                                             aria-hidden="true"
                                         />
                                     </p>
-                                </div>
+                                </div> */}
 
                                 {/* Cart */}
                                 <div className="ml-4 flow-root lg:ml-6">
@@ -493,7 +526,7 @@ export default function Navigation() {
                                         />
                                         <span
                                             className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                                            {cart.cart?.totalItem || 0}
+                                            {cart.cart?.length || 0}
                                         </span>
                                         <span className="sr-only">items in cart, view bag</span>
                                     </Button>

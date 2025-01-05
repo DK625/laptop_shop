@@ -9,7 +9,7 @@ import HomeLaptopCard from "../../Home/HomeLaptopCard";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { findLaptopById } from "../../../Redux/Admin/Laptop/Action";
-import { addItemToCart } from "../../../Redux/Customers/Cart/Action";
+import { addItemToCart, getCart } from "../../../Redux/Customers/Cart/Action";
 import { getAllReviews } from "../../../Redux/Customers/Review/Action";
 import { gounsPage1 } from "../../../Data/Gouns/gouns";
 import { API_BASE_URL } from "../../../Config/api";
@@ -62,7 +62,7 @@ export default function LaptopDetails() {
         setActiveImage(image);
     };
     const handleQuantityChange = (num) => {
-        setQuantity((prev) => Math.max(1, prev + num)); // Ensure quantity is at least 1
+        setQuantity((prev) => Math.min(Math.max(1, prev + num),selectedColor?.quantity??200)); // Ensure quantity is at least 1
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -73,6 +73,7 @@ export default function LaptopDetails() {
                 quantity
             };
             const result = await dispatch(addItemToCart({ data, jwt }));
+            dispatch(getCart(jwt))
             // console.log('result: ', result)
 
             // if (result.error) {
@@ -165,7 +166,7 @@ export default function LaptopDetails() {
                                     -{laptop?.discountPercent}%
                                 </p>
                                 <p className="font-semibold">
-                                    {laptop?.price * (100 - laptop?.discountPercent) / 100} VND
+                                    {(laptop?.price * (100 - laptop?.discountPercent) / 100)?.toLocaleString('vi-VN')} VND
                                 </p>
                             </div>
 
@@ -233,7 +234,7 @@ export default function LaptopDetails() {
                                         <RemoveCircleOutlineIcon />
                                     </IconButton>
 
-                                    <span className="py-1 px-7 border rounded-sm">{quantity}</span>
+                                    <span className="py-1 px-7 border rounded-sm">{quantity+'/'+selectedColor?.quantity}</span>
 
                                     <IconButton
                                         onClick={() => handleQuantityChange(1)}

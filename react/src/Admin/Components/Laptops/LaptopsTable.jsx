@@ -34,17 +34,12 @@ const LaptopsTable = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { customersLaptop } = useSelector((store) => store);
-  const [filterValue, setFilterValue] = useState({
-    availability: "",
-    category: "",
-    sort: "",
-  });
 
   // query
   const searchParams = new URLSearchParams(location.search);
   const availability = searchParams.get("availability");
   const category = searchParams.get("category");
-  const sort = searchParams.get("sort");
+  const sortPrice = searchParams.get("sortPrice");
   const page = searchParams.get("page");
 
   const handlePaginationChange = (event, value) => {
@@ -62,21 +57,13 @@ const LaptopsTable = () => {
       minPrice: 0,
       maxPrice: 100000,
       minDiscount: 0,
-      sort: sort || "price_low",
+      sortPrice: sortPrice || "increase",
       pageNumber: page || 0,
       pageSize: 10,
       stock: availability,
     };
     dispatch(findLaptops(data));
-  }, [availability, category, sort, page, customersLaptop.deleteLaptop]);
-
-  const handleFilterChange = (e, sectionId) => {
-    console.log(e.target.value, sectionId);
-    setFilterValue((values) => ({ ...values, [sectionId]: e.target.value }));
-    searchParams.set(sectionId, e.target.value);
-    const query = searchParams.toString();
-    navigate({ search: `?${query}` });
-  };
+  }, [availability, category, sortPrice, page, customersLaptop.deleteLaptop]);
 
   const handleDeleteLaptop = (laptopId) => {
     console.log("delete laptop ", laptopId);

@@ -80,10 +80,10 @@ export const updateCartItem = (reqData) => async (dispatch) => {
         dispatch({type: UPDATE_CART_ITEM_REQUEST});
         const {data} = await api.put(`${API_BASE_URL}/api/cart_items/${reqData.cartItemId}`,reqData.data);
         console.log("updated cartitem ", data)
-        dispatch({
-            type: UPDATE_CART_ITEM_SUCCESS,
-            payload: data,
-        });
+        // dispatch({
+        //     type: UPDATE_CART_ITEM_SUCCESS,
+        //     payload: data,
+        // });
     } catch (error) {
         dispatch({
             type: UPDATE_CART_ITEM_FAILURE,
