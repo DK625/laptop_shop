@@ -1,5 +1,6 @@
 package com.id.akn.serviceimpl;
 
+import com.id.akn.model.Category;
 import com.id.akn.model.Order;
 import com.id.akn.repository.LaptopRepository;
 import com.id.akn.repository.OrderRepository;
@@ -70,16 +71,23 @@ public class RevenueStatisticsServiceImpl implements RevenueStatisticsService {
         Map<String, Double> productRevenue = orders.stream()
                 .flatMap(order -> order.getOrderItems().stream())
                 .collect(Collectors.groupingBy(
-                        orderItem -> orderItem.getLaptop().getModel(),
+                        orderItem -> orderItem.getLaptop().getCategories().stream()
+                                .map(Category::getName)
+                                .findFirst()
+                                .orElse("Unknown"),
                         Collectors.summingDouble(item -> item.getLaptop().getPrice() * item.getQuantity())
                 ));
 
-        double totalRevenue = orders.stream().mapToDouble(Order::getTotalPrice).sum();
+        double totalRevenue = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .mapToDouble(item -> item.getLaptop().getPrice() * item.getQuantity())
+                .sum();
 
         return productRevenue.entrySet().stream()
                 .map(entry -> new ProductRevenuePercentageDTO(entry.getKey(), (entry.getValue() / totalRevenue) * 100))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public BudgetRes getBudgetRes() {
