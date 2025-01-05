@@ -19,7 +19,6 @@ const Order = () => {
     const {order} = useSelector(store => store);
     const [status, setStatus] = useState('');
     
-    console.log("cls-linh-order", order);
     
 
     useEffect(() => {

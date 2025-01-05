@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import LaptopReviewCard from "./LaptopReviewCard";
-import { Box, Button, Grid, IconButton, LinearProgress, Rating, Alert, Snackbar } from "@mui/material";
+import { Box, Button, Grid, IconButton, LinearProgress, Rating, Alert, Snackbar, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import HomeLaptopCard from "../../Home/HomeLaptopCard";
@@ -98,6 +98,12 @@ export default function LaptopDetails() {
             container.scrollLeft += direction === "left" ? -scrollAmount : scrollAmount;
         }
     };
+
+    const [newReview, setNewReview] = useState({
+        des:'',
+        review:0
+    });
+    
 
 
 
@@ -284,7 +290,22 @@ export default function LaptopDetails() {
                     <h1 className="font-semibold text-lg pb-4">
                         Nhận xét và đánh giá
                     </h1>
-                    <div className="border p-5 rounded-md">
+                    <div>
+                        <TextField className="mb-4" 
+                        value={newReview.des} 
+                        onChange={(e,v)=>{
+                            setNewReview(pre=>({...pre,des:v}))
+                        }} 
+                        placeholder="Thêm nhận xét của bạn"/>
+                        <Rating
+                            name="star-rating"
+                            value={newReview.review}
+                            onChange={(event, v) => {
+                                setNewReview(pre=>({...pre,review:v}))
+                            }}
+                        />
+                    </div>
+                    <div className="border p-5 rounded-md mt-3">
                         <Grid container spacing={7}>
                             <Grid item xs={7}>
                                 <div className="space-y-5">

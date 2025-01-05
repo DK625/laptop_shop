@@ -57,7 +57,6 @@ async function createUrLPayment(amount, id) {
       }
     );
 
-    console.log("cls-linh", response.data, paymentData);
     return response.data.data.checkoutUrl;
   } catch (error) {
     console.error("Error creating payment URL:", error);

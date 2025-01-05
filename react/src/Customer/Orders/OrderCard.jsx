@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 
 const OrderCard = ({ item, order }) => {
-  console.log("cls-linh-order1",item, order);
   
   const navigate = useNavigate();
   console.log("items ", item,order,order.orderStatus);

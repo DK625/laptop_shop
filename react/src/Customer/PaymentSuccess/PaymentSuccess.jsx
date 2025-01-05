@@ -24,7 +24,7 @@ const PaymentSuccess = () => {
         const parts = payment.transactions[0].description.split(" ");
         const order_id = parts[3];
         const res = await api.put(
-          `/api/orders/${order_id}?orderStatus=CONFIRMED&paymentStatus=COMPLETED`
+          `/api/orders/${order_id}?paymentStatus=COMPLETED`
         );
       }
     };

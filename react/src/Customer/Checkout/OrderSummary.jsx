@@ -34,7 +34,6 @@ const OrderSummary = () => {
         dispatch(createPayment(data))
     }
 
-console.log("cls-linh", order);
 
     return (
         <div className="space-y-5">

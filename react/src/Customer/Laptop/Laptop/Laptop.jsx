@@ -33,6 +33,8 @@ export default function Laptop() {
   const jwt = localStorage.getItem("jwt");
   const param = useParams();
   const { laptop } = useSelector((store) => store);
+  console.log('cls-linh-laptop',laptop);
+  
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
 
@@ -50,6 +52,8 @@ export default function Laptop() {
   const sortValue = searchParams.get("sort");
   const pageNumber = searchParams.get("page") || 1;
   const stock = searchParams.get("stock");
+  // const [colors, setColors] = useState([]);
+  
 
   // console.log("location - ", colorValue, sizeValue,price,disccount);
 
@@ -70,7 +74,7 @@ export default function Laptop() {
     const [minPrice, maxPrice] = price === null ? [0, 0] : price.split("-").map(Number);
     const data = {
       category: param.lavelThree,
-      // colors: colorValue || [],
+      color: colorValue || [],
       // sizes: sizeValue || [],
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 10000,
@@ -80,6 +84,8 @@ export default function Laptop() {
       pageSize: 10,
       stock: stock,
     };
+    console.log('cls-linh-data',data);
+    
     dispatch(findLaptops(data));
   }, [param.lavelThree, colorValue, sizeValue, price, disccount, sortValue, pageNumber, stock]);
 
@@ -401,8 +407,8 @@ export default function Laptop() {
 
                 {/* Laptop grid */}
                 <div className="lg:col-span-4 w-full ">
-                  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
-                    {laptop?.laptops?.content?.map((item) => (
+                  <div className="grid grid-cols-5 gap-3 bg-white border py-5 rounded-md ">
+                    {laptop?.laptops.map((item) => (
                       <LaptopCard laptop={item} />
                     ))}
                   </div>

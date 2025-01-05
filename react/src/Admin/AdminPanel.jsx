@@ -133,8 +133,8 @@ export default function AdminPanel() {
                         <Route path="/laptop/create" element={<CreateLaptopForm/>}></Route>
                         {/*<Route path="/laptop/update/:laptopId" element={<UpdateLaptopForm/>}></Route>*/}
                         <Route path="/laptops" element={<LaptopsTable/>}></Route>
-                        {/*<Route path="/orders" element={<OrdersTable/>}></Route>*/}
-                        {/*<Route path="/customers" element={<Customers/>}></Route>*/}
+                        <Route path="/orders" element={<OrdersTable/>}></Route>
+                        <Route path="/customers" element={<Customers/>}></Route>
                         {/*<Route path="/demo" element={<DemoAdmin />}></Route>*/}
                     </Routes>
                 </Box>

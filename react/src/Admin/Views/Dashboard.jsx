@@ -44,7 +44,6 @@ const Dashboard = () => {
         const getData = async ()=>{
             const res = await api.get(`/api/dashboard/yearly-revenue`)
             const res2 = await api.get(`/api/dashboard/product-revenue-percentages`)
-            console.log('cls-linh-repo',res.data,res2.data);
             
         }
         getData()

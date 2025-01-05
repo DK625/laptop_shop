@@ -14,7 +14,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Pagination from "@mui/material/Pagination";
 import TextField from '@mui/material/TextField';
-
+import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 import { filters, singleFilter, sortOptions } from "./FilterData";
 import LaptopCard from "../LaptopCard/LaptopCard";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -25,6 +25,7 @@ import {
   searchLaptop,
 } from "../../../Redux/Admin/Laptop/Action";
 import { Backdrop, CircularProgress } from "@mui/material";
+import SearchImage from "../../../Customer/SearchImage/SearchImage";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -39,12 +40,21 @@ export default function SearchLaptop() {
   const { laptop } = useSelector((store) => store);
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const [laptops, setLaptops] = useState([]);
   const queryParams = new URLSearchParams(location.search);  
   const keySearch = queryParams.get('search');
+  const [isSearchImage, setIsSearchImage] = useState(false);
+  
+
+  
 
   const handleLoderClose = () => {
     setIsLoaderOpen(false);
   };
+
+  useEffect(()=>{
+    setLaptops(laptop?.searchLaptops)
+  },[laptop])
 
   
   // console.log("location - ", colorValue, sizeValue,price,disccount);
@@ -197,13 +207,18 @@ export default function SearchLaptop() {
         </Transition.Root>
 
         <main className="mx-auto px-4 lg:px-14 ">
+          <div hidden={!isSearchImage}>
+          <SearchImage setValue={setLaptops}/>
+          </div>
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6">
             {/* <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               Search Laptop
             </h1> */}
 
             <div className="flex items-center">
+              <div className="pr-3 cursor-pointer" onClick={()=>setIsSearchImage(pre=>!pre)}><ImageSearchIcon/></div>
               <Menu as="div" className="relative inline-block text-left">
+
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                     Sort
@@ -285,7 +300,7 @@ export default function SearchLaptop() {
                       onChange={handleSearch}
                     /> */}
                   <div className="flex flex-wrap justify-center bg-white py-5 rounded-md ">
-                    {laptop?.searchLaptops?.map((item) => (
+                    {laptops?.map((item) => (
                       <LaptopCard laptop={item} />
                     ))}
                   </div>
