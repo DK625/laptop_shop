@@ -29,14 +29,14 @@ const Achivement = () => {
   const imageSrc = theme.palette.mode === 'light' ? 'triangle-light.png' : 'triangle-dark.png'
 
   return (
-  
-       <Card className='h-full' sx={{ position: 'relative' }}>
+
+    <Card className='h-full' sx={{ position: 'relative' }}>
       <CardContent>
-      <Typography variant='h6' sx={{ letterSpacing: '0.25px' }}>
-          Shop With Zosh
+        <Typography variant='h6' sx={{ letterSpacing: '0.25px' }}>
+          Shop With Tu
         </Typography>
         <Typography variant='body2' >Congratulations 🥳</Typography>
-        
+
         <Typography variant='h5' sx={{ my: 3.1, color: 'primary.main' }}>
           420.8k
         </Typography>
@@ -47,8 +47,8 @@ const Achivement = () => {
         <TrophyImg alt='trophy' src='/images/misc/trophy.png' />
       </CardContent>
     </Card>
-   
-   
+
+
   )
 }
 

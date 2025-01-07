@@ -35,8 +35,8 @@ async function createUrLPayment(amount, id) {
     orderCode: generateRandomNumber(),
     amount: 2000,
     description: id,
-    cancelUrl: "http://14.225.29.152:3000/account/order",
-    returnUrl: "http://14.225.29.152:3000/payment/success",
+    cancelUrl: "http://localhost:3000/account/order",
+    returnUrl: "http://localhost:3000/payment/success",
   };
 
   // Thêm chữ ký vào dữ liệu thanh toán
