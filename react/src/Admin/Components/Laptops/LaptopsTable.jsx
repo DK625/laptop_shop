@@ -59,7 +59,7 @@ const ModelUpdate = (props) => {
             },
           }}
         >
-          <UpdateLaptopForm id={props.id}/>
+          <UpdateLaptopForm id={props.id} />
         </Box>
       </Box>
     </Modal>
@@ -158,7 +158,7 @@ const LaptopsTable = () => {
                     {" "}
                     <Avatar
                       alt={item.model}
-                      src={"http://localhost:8080" + item.imageUrls[0]}
+                      src={"http://14.225.29.152:8080" + item.imageUrls[0]}
                     />{" "}
                   </TableCell>
 
@@ -195,10 +195,10 @@ const LaptopsTable = () => {
                       Update
                     </Button>
                   </TableCell>
-                  <TableCell hidden={item.status===0} sx={{ textAlign: "center" }}>
+                  <TableCell hidden={item.status === 0} sx={{ textAlign: "center" }}>
                     <Button
-                      
-                      className={`${item.status === 0 ? "!hidden":""}`}
+
+                      className={`${item.status === 0 ? "!hidden" : ""}`}
                       variant="text"
                       onClick={() => handleDeleteLaptop(item.id)}
                     >
@@ -218,7 +218,7 @@ const LaptopsTable = () => {
             color="primary"
             className=""
             onChange={handlePaginationChange}
-            // value={page}
+          // value={page}
           />
         </div>
       </Card>
