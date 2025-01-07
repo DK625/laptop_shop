@@ -2,6 +2,8 @@ package com.id.akn.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Collections;
+
 
 import com.id.akn.exception.*;
 import org.springframework.http.HttpStatus;
@@ -30,14 +32,32 @@ public class ReviewController {
 	private UserService userService;
 
 	@PostMapping("/create")
-	public ResponseEntity<com.id.akn.model.Review> createReviewHandler(@RequestBody(required = false) ReviewDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException, OrderException{
-		User user=userService.findUserProfileByJwt(jwt);
-		System.out.println("Laptop id "+req.getLaptopId()+" - "+req.getReview());
-		com.id.akn.model.Review review=reviewService.createReview(req, user) ;
-		System.out.println("Laptop review "+req.getReview());
-		return new ResponseEntity<com.id.akn.model.Review>(review,HttpStatus.ACCEPTED);
+	public ResponseEntity<?> createReviewHandler(@RequestBody(required = false) ReviewDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException, OrderException {
+		try {
+//			if (req.getOrderId() == null) {
+//				return new ResponseEntity<>(
+//						Collections.singletonMap("message", "You have not placed an order yet"),
+//						HttpStatus.NOT_FOUND
+//				);
+//			}
+
+			User user = userService.findUserProfileByJwt(jwt);
+			com.id.akn.model.Review review = reviewService.createReview(req, user);
+			return new ResponseEntity<>(review, HttpStatus.CREATED);
+		} catch (OrderException e) {
+			return new ResponseEntity<>(
+					Collections.singletonMap("message", e.getMessage()),
+					HttpStatus.NOT_FOUND
+			);
+		} catch (Exception e) {
+			return new ResponseEntity<>(
+					Collections.singletonMap("message", "Internal Server Error"),
+					HttpStatus.INTERNAL_SERVER_ERROR
+			);
+		}
 	}
-	
+
+
 	@GetMapping("/laptop/{laptopId}")
 	public ResponseEntity<List<com.id.akn.model.Review>> getLaptopReviewsHandler(@PathVariable Long laptopId){
 		List<com.id.akn.model.Review>reviews=reviewService.getLaptopReviews(laptopId);

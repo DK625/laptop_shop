@@ -25,7 +25,7 @@ function calculateSignature(data) {
 
   // Tạo chữ ký HMAC SHA-256 bằng js-sha256
   return hmac(
-    "3c26171d91490b02b7908c549b4e02538e030e489399e79770f0d08b4cde03a4",
+    "b9317b54b50590c1a73d0a4719e6dd7d5b8ee394033299a2c7d58e58c6979f88",
     sortedData
   );
 }
@@ -50,8 +50,8 @@ async function createUrLPayment(amount, id) {
       paymentData,
       {
         headers: {
-          "x-client-id": "8313ca80-18a4-495a-a54c-05c20b8848f3",
-          "x-api-key": "66ac2403-5a77-45b9-b100-f97b27457e67",
+          "x-client-id": "64518f68-68ad-4152-9c7e-b9a6a7301ed4",
+          "x-api-key": "0b9f150c-2c76-494f-8cc4-8245ca4a611b",
           "Content-Type": "application/json",
         },
       }

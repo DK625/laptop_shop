@@ -28,6 +28,8 @@ export default function LaptopDetails() {
     const dispatch = useDispatch();
     const { laptop } = useSelector((store) => store.laptop);
     const reviewStore = useSelector((store) => store.review);
+    const reviewStoreaa = useSelector((store) => store);
+    console.log('reviewStore: ', reviewStoreaa)
     const { laptopId } = useParams();
     const jwt = localStorage.getItem("jwt");
     const [openAlert, setOpenAlert] = useState(false);
@@ -64,7 +66,7 @@ export default function LaptopDetails() {
         setActiveImage(image);
     };
     const handleQuantityChange = (num) => {
-        setQuantity((prev) => Math.min(Math.max(1, prev + num),selectedColor?.quantity??200)); // Ensure quantity is at least 1
+        setQuantity((prev) => Math.min(Math.max(1, prev + num), selectedColor?.quantity ?? 200)); // Ensure quantity is at least 1
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -102,27 +104,34 @@ export default function LaptopDetails() {
     };
 
     const [newReview, setNewReview] = useState({
-        des:'',
-        review:0
+        des: '',
+        review: 0
     });
-    
+
     const handleSubmitReview = async () => {
-        if(newReview.des  !== ''){
-            const res = await api.post('/api/reviews/create',{
-                "laptopId":parseInt(laptopId),
-                "review":newReview.des
-            })
-            
-            await api.post('/api/ratings/create',{
-                "laptopId":parseInt(laptopId),
-                "rating":newReview.review
-            })
-            if(res){
-                setNewReview({
-                    des:'',
-                    review:0
-                })
-                dispatch(getAllReviews(laptopId));
+        if (newReview.des !== '') {
+            try {
+                const res = await api.post('/api/reviews/create', {
+                    "laptopId": parseInt(laptopId),
+                    "review": newReview.des
+                });
+
+                await api.post('/api/ratings/create', {
+                    "laptopId": parseInt(laptopId),
+                    "rating": newReview.review
+                });
+
+                if (res) {
+                    setNewReview({
+                        des: '',
+                        review: 0
+                    });
+                    dispatch(getAllReviews(laptopId));
+                }
+
+            } catch (error) {
+                alert(error?.response?.data?.message || "You haven't logged in yet");
+                console.log("Error submitting review:", error);
             }
         }
     }
@@ -262,7 +271,7 @@ export default function LaptopDetails() {
                                         <RemoveCircleOutlineIcon />
                                     </IconButton>
 
-                                    <span className="py-1 px-7 border rounded-sm">{quantity+'/'+selectedColor?.quantity}</span>
+                                    <span className="py-1 px-7 border rounded-sm">{quantity + '/' + selectedColor?.quantity}</span>
 
                                     <IconButton
                                         onClick={() => handleQuantityChange(1)}
@@ -313,24 +322,24 @@ export default function LaptopDetails() {
                         Nhận xét và đánh giá
                     </h1>
 
-                        <div className="flex flex-col mb-10 max-w-[400px]">
+                    <div className="flex flex-col mb-10 max-w-[400px]">
 
-                        <TextField className="mb-4" 
-                        value={newReview.des} 
-                        onChange={(e)=>{
-                            setNewReview(pre=>({...pre,des:e.target.value}))
-                        }} 
-                        placeholder="Thêm nhận xét của bạn"/>
+                        <TextField className="mb-4"
+                            value={newReview.des}
+                            onChange={(e) => {
+                                setNewReview(pre => ({ ...pre, des: e.target.value }))
+                            }}
+                            placeholder="Thêm nhận xét của bạn" />
                         <Rating
                             name="star-rating"
                             value={newReview.review}
                             onChange={(event, v) => {
-                                setNewReview(pre=>({...pre,review:v}))
+                                setNewReview(pre => ({ ...pre, review: v }))
                             }}
-                            />
-                        <button className="px-4 py-1 max-w-[80px] cursor-pointer bg-blue-400 rounded-lg text-white" 
-                        onClick={handleSubmitReview}>Gửi</button>
-                            </div>
+                        />
+                        <button className="px-4 py-1 max-w-[80px] cursor-pointer bg-blue-400 rounded-lg text-white"
+                            onClick={handleSubmitReview}>Gửi</button>
+                    </div>
 
                     <div className="border p-5 rounded-md mt-3">
                         <Grid container spacing={7}>

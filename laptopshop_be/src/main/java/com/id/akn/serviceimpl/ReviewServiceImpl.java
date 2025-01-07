@@ -27,19 +27,20 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	@Override
 	public com.id.akn.model.Review createReview(ReviewDTO req, User user) throws LaptopException, OrderException {
-		Order order = orderRepository.findById(req.getOrderId()).orElseThrow(() -> new OrderException("Order not found"));
+//		Laptop laptop = laptopRepository.findById(req.getLaptopId()).orElseThrow(() -> new LaptopException("Laptop not found"));
+//		Order order = orderRepository.findById(req.getOrderId()).orElseThrow(() -> new OrderException("You have not placed an order yet."));
 		com.id.akn.model.Review review = new com.id.akn.model.Review();
-		if(!order.getOrderStatus().equals(Order.OrderStatus.DELIVERED)){
-			throw new OrderException("Order has not completed");
-		}
-		else {
-			Laptop laptop = laptopRepository.findById(req.getLaptopId()).orElseThrow(() -> new LaptopException("Laptop not found"));
-			review.setLaptop(laptop);
-			review.setUser(user);
-			review.setReview(req.getReview());
-			review.setCreatedAt(LocalDateTime.now());
-			reviewRepository.save(review);
-		}
+//		if(!order.getOrderStatus().equals(Order.OrderStatus.DELIVERED)){
+//			throw new OrderException("Order has not completed");
+//		}
+//		else {
+		Laptop laptop = laptopRepository.findById(req.getLaptopId()).orElseThrow(() -> new LaptopException("Laptop not found"));
+		review.setLaptop(laptop);
+		review.setUser(user);
+		review.setReview(req.getReview());
+		review.setCreatedAt(LocalDateTime.now());
+		reviewRepository.save(review);
+//		}
 		return review;
 	}
 	@Override

@@ -27,18 +27,24 @@ public class RatingServiceImpl implements RatingService {
 
 	@Override
 	public com.id.akn.model.Rating createRating(RatingDTO req, User user) throws LaptopException, OrderException {
-		Order order = orderRepository.findById(req.getOrderId()).orElseThrow(() -> new OrderException("Order not found"));
+//		Order order = orderRepository.findById(req.getOrderId()).orElseThrow(() -> new OrderException("Order not found"));
 		Laptop laptop = laptopRepository.findById(req.getLaptopId()).orElseThrow(() -> new LaptopException("Laptop not found"));
+//		com.id.akn.model.Rating rating = new com.id.akn.model.Rating();
+//		if(!order.getOrderStatus().equals(Order.OrderStatus.DELIVERED)){
+//			throw new OrderException("Order has not completed");
+//		}else{
+//			rating.setLaptop(laptop);
+//			rating.setUser(user);
+//			rating.setRating(req.getRating());
+//			rating.setCreatedAt(LocalDateTime.now());
+//			ratingRepository.save(rating);
+//		}
 		com.id.akn.model.Rating rating = new com.id.akn.model.Rating();
-		if(!order.getOrderStatus().equals(Order.OrderStatus.DELIVERED)){
-			throw new OrderException("Order has not completed");
-		}else{
-			rating.setLaptop(laptop);
-			rating.setUser(user);
-			rating.setRating(req.getRating());
-			rating.setCreatedAt(LocalDateTime.now());
-			ratingRepository.save(rating);
-		}
+		rating.setLaptop(laptop);
+		rating.setUser(user);
+		rating.setRating(req.getRating());
+		rating.setCreatedAt(LocalDateTime.now());
+		ratingRepository.save(rating);
 		return rating;
 	}
 
