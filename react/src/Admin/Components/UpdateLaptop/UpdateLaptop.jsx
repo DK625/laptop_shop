@@ -287,7 +287,7 @@ const UpdateLaptopForm = (props) => {
   return (
     <Fragment>
       <Typography variant="h3" sx={{ textAlign: "center", marginBottom: 3 }}>
-        Add New Laptop
+        Update New Laptop
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
