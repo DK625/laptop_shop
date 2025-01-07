@@ -42,12 +42,17 @@ public class LaptopController {
 			@RequestParam(required = false) Long maxPrice,
 			@RequestParam(required = false) Short stockStatus,
 			@RequestParam(required = false) String sortPrice,
-			Pageable pageable) {
+			@RequestParam(required = false, defaultValue = "1") Integer page,
+			@RequestParam(required = false, defaultValue = "10") Integer size) {
+
+		Pageable pageable = PageRequest.of(page - 1, size);
 
 		Page<LaptopDTO> laptops = laptopService.getAllLaptop(
 				colors, category, discountPercentMin, discountPercentMax, screenSize, minPrice, maxPrice, stockStatus, sortPrice, pageable);
+
 		return ResponseEntity.ok(laptops);
 	}
+
 
 	@GetMapping("/search")
 	public ResponseEntity<List<LaptopDTO>> searchLaptopHandler(@RequestParam String q){
