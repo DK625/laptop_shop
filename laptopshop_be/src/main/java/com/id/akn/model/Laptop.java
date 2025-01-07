@@ -25,7 +25,7 @@ public class Laptop {
     @JoinColumn(name = "brand_id")
 	private Brand brand;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String model;
 
 	@Column(name = "status")
