@@ -3,5 +3,5 @@ venv
 app/static/faiss_index.bin
 app/static/image_embeddings.db
 app/static/embedding_model.h5
-app/static/laptop_img
+#app/static/laptop_img
 .idea
