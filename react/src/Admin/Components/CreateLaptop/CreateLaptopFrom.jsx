@@ -229,6 +229,9 @@ const CreateLaptopForm = () => {
       const fullData = await dispatch(uploadFiles(res.id, formData));
       alert("Laptop created successfully", fullData);
     }
+    else{
+      alert("Model đã tồn tại vui lòng chọn tên khác");
+    }
   };
 
   return (
