@@ -19,7 +19,7 @@ export default function SearchImage({ setValue }) {
 
       try {
         const res = await axios.post(
-          "http://127.0.0.1:5000/data/search",
+          "http://14.225.29.152:5000/data/search",
           formData,
           {
             headers: {
