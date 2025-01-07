@@ -66,7 +66,7 @@ const UpdateLaptopForm = (props) => {
     origin: "",
     warranty: 0,
     price: 0,
-    status:0,
+    status: 0,
     discountPercent: 0,
   });
 
@@ -87,7 +87,7 @@ const UpdateLaptopForm = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const baseUrl = "http://localhost:8080/";
+        const baseUrl = "http://14.225.29.152:8080/";
         const [
           brandsRes,
           colorsRes,
@@ -118,7 +118,7 @@ const UpdateLaptopForm = (props) => {
   }, []);
 
   const handleChange = (e) => {
-    
+
     const { name, value } = e.target;
     setLaptopData((prevState) => {
       let parsedValue = value;
@@ -245,8 +245,8 @@ const UpdateLaptopForm = (props) => {
     },
   ];
 
-  console.log('cls-linh-status',laptopData);
-  
+  console.log('cls-linh-status', laptopData);
+
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);

@@ -58,7 +58,7 @@ const CreateLaptopForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const baseUrl = "http://localhost:8080/";
+        const baseUrl = "http://14.225.29.152:8080/";
         const [brandsRes, colorsRes, gpusRes, cpusRes, categoriesRes, osVersionsRes] = await Promise.all([
           axios.get(`${baseUrl}brands`),
           axios.get(`${baseUrl}colors`),
@@ -165,7 +165,7 @@ const CreateLaptopForm = () => {
   //     const selectedGpu = gpus.find((g) => g.id === gpu.id);
   //     return selectedGpu?.type === type;
   //   });
-  
+
   // const isGpuTypeSelected = (type, currentGpuId) =>
   //   laptopData.gpus.some((gpuId) => {
   //     const gpu = gpus.find((g) => g.id === gpuId);
@@ -176,7 +176,7 @@ const CreateLaptopForm = () => {
       const selectedGpu = gpus.find((g) => g.id === gpu.id); // Tìm GPU trong danh sách `gpus` gốc
       return selectedGpu?.type === type && gpu.id !== currentGpuId; // So sánh loại và loại bỏ GPU hiện tại
     });
-  
+
   // const isGpuDisabled = (gpuType, gpuId) => {
   //   const selectedGpuTypes = laptopData.gpus.map((gpu) => {
   //     const selectedGpu = gpus.find((g) => g.id === gpu.id);
@@ -366,7 +366,7 @@ const CreateLaptopForm = () => {
               </Select>
             </FormControl>
           </Grid> */}
-          
+
           {/*RAM*/}
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label="RAM Memory" name="ramMemory" value={laptopData.ramMemory} onChange={handleChange} type="number" />
