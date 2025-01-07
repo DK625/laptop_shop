@@ -8,6 +8,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Modal,
   Pagination,
   Select,
   Table,
@@ -18,39 +19,77 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteLaptop,
-  findLaptops,
-} from "../../../Redux/Admin/Laptop/Action";
+import { deleteLaptop, findLaptops } from "../../../Redux/Admin/Laptop/Action";
+import UpdateLaptopForm from "../UpdateLaptop/UpdateLaptop";
+
+const ModelUpdate = (props) => {
+  return (
+    <Modal
+      open={props.open}
+      onClose={props.handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+        padding: 2,
+      }}
+    >
+      <Box className="relative rounded-md bg-black">
+        <div className="cursor-pointer z-50 absolute top-3 right-3 rounded-lg p-3 bg-slate-500" onClick={props.handleClose}>
+          x
+        </div>
+        <Box
+          sx={{
+            maxHeight: "90vh",
+            overflowY: "auto",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            padding: 2,
+            boxSizing: "border-box",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+        >
+          <UpdateLaptopForm id={props.id}/>
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
 
 const LaptopsTable = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { customersLaptop } = useSelector((store) => store);
-  const [filterValue, setFilterValue] = useState({
-    availability: "",
-    category: "",
-    sort: "",
-  });
+  const { laptop } = useSelector((store) => store);
+  // const {laptop} = useSelector((store) => store);
 
   // query
   const searchParams = new URLSearchParams(location.search);
   const availability = searchParams.get("availability");
   const category = searchParams.get("category");
-  const sort = searchParams.get("sort");
+  const sortPrice = searchParams.get("sortPrice");
   const page = searchParams.get("page");
+  const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(null);
 
   const handlePaginationChange = (event, value) => {
     searchParams.set("page", value - 1);
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -60,31 +99,31 @@ const LaptopsTable = () => {
       colors: [],
       sizes: [],
       minPrice: 0,
-      maxPrice: 100000,
+      // maxPrice: 100000,
       minDiscount: 0,
-      sort: sort || "price_low",
+      sortPrice: sortPrice || "increase",
       pageNumber: page || 0,
       pageSize: 10,
       stock: availability,
     };
     dispatch(findLaptops(data));
-  }, [availability, category, sort, page, customersLaptop.deleteLaptop]);
-
-  const handleFilterChange = (e, sectionId) => {
-    console.log(e.target.value, sectionId);
-    setFilterValue((values) => ({ ...values, [sectionId]: e.target.value }));
-    searchParams.set(sectionId, e.target.value);
-    const query = searchParams.toString();
-    navigate({ search: `?${query}` });
-  };
+  }, [availability, category, sortPrice, page, laptop?.deleteLaptop]);
 
   const handleDeleteLaptop = (laptopId) => {
-    console.log("delete laptop ", laptopId);
+    window.location.reload()
     dispatch(deleteLaptop(laptopId));
+  };
+
+  const handleUpdate = (id) => {
+    if (id) {
+      setOpen(true);
+      setUpdate(id);
+    }
   };
 
   return (
     <Box width={"100%"}>
+      <ModelUpdate open={open} handleClose={handleClose} id={update} />
       <Card className="mt-2">
         <CardHeader
           title="All Laptops"
@@ -103,20 +142,24 @@ const LaptopsTable = () => {
                 <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Quantity</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Update</TableCell>
 
                 <TableCell sx={{ textAlign: "center" }}>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {customersLaptop?.laptops?.content?.map((item) => (
+              {laptop?.laptops?.map((item) => (
                 <TableRow
                   hover
-                  key={item.name}
+                  key={item.model}
                   sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 } }}
                 >
                   <TableCell>
                     {" "}
-                    <Avatar alt={item.titel} src={item.imageUrl} />{" "}
+                    <Avatar
+                      alt={item.model}
+                      src={"http://localhost:8080" + item.imageUrls[0]}
+                    />{" "}
                   </TableCell>
 
                   <TableCell
@@ -129,23 +172,33 @@ const LaptopsTable = () => {
                           fontSize: "0.875rem !important",
                         }}
                       >
-                        {item.title}
+                        {item.model}
                       </Typography>
                       <Typography variant="caption">{item.brand}</Typography>
                     </Box>
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.category.name}
+                    {item?.categories[0]?.name}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.discountedPrice}
+                    {item.price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.quantity}
+                    {item?.laptopColors[0]?.quantity}
                   </TableCell>
 
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
+                      variant="text"
+                      onClick={() => handleUpdate(item.id)}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell hidden={item.status===0} sx={{ textAlign: "center" }}>
+                    <Button
+                      
+                      className={`${item.status === 0 ? "!hidden":""}`}
                       variant="text"
                       onClick={() => handleDeleteLaptop(item.id)}
                     >
@@ -161,7 +214,7 @@ const LaptopsTable = () => {
       <Card className="mt-2 border">
         <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
-            count={customersLaptop.laptops?.totalPages}
+            count={laptop?.laptops?.totalPages}
             color="primary"
             className=""
             onChange={handlePaginationChange}

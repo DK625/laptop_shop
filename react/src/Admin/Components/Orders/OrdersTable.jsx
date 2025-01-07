@@ -33,12 +33,13 @@ const OrdersTable = () => {
     const [orderStatus, setOrderStatus] = useState("");
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-    const {adminsOrder} = useSelector((store) => store);
+    const {adminOrder} = useSelector((store) => store);
+    
     const [anchorElArray, setAnchorElArray] = useState([]);
 
     useEffect(() => {
         dispatch(getOrders({jwt}));
-    }, [jwt, adminsOrder.delivered, adminsOrder.shipped, adminsOrder.confirmed]);
+    }, [jwt, adminOrder?.delivered, adminOrder?.shipped, adminOrder?.confirmed]);
 
     const handleUpdateStatusMenuClick = (event, index) => {
         const newAnchorElArray = [...anchorElArray];
@@ -74,6 +75,7 @@ const OrdersTable = () => {
         handleUpdateStatusMenuClose();
         dispatch(deleteOrder(orderId));
     };
+    
 
     return (
         <Box>
@@ -100,10 +102,10 @@ const OrdersTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {adminsOrder?.orders?.map((item, index) => (
+                            {adminOrder?.orders?.map((item, index) => (
                                 <TableRow
                                     hover
-                                    key={item.name}
+                                    key={item.id}
                                     sx={{"&:last-of-type td, &:last-of-type th": {border: 0}}}
                                 >
                                     <TableCell sx={{}}>
@@ -125,14 +127,14 @@ const OrdersTable = () => {
                                                 }}
                                             >
                                                 {item?.orderItems.map((order) => (
-                                                    <span className=""> {order.laptop.title},</span>
+                                                    <span className=""> {order?.laptop.model},</span>
                                                 ))}
                                             </Typography>
                                             <Typography variant="caption">
                                                 {item?.orderItems.map((order) => (
                                                     <span className="opacity-60">
                             {" "}
-                                                        {order.laptop.brand},
+                                                        {order.laptop.brand.name},
                           </span>
                                                 ))}
                                             </Typography>

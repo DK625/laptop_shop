@@ -35,4 +35,5 @@ public class LaptopDTO {
     private long price;
     private Set<String> imageUrls;
     private float discountPercent;
+    private Short status;
 }

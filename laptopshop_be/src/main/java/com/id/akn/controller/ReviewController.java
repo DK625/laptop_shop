@@ -30,7 +30,7 @@ public class ReviewController {
 	private UserService userService;
 
 	@PostMapping("/create")
-	public ResponseEntity<com.id.akn.model.Review> createReviewHandler(@RequestBody ReviewDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException{
+	public ResponseEntity<com.id.akn.model.Review> createReviewHandler(@RequestBody(required = false) ReviewDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException{
 		User user=userService.findUserProfileByJwt(jwt);
 		System.out.println("Laptop id "+req.getLaptopId()+" - "+req.getReview());
 		com.id.akn.model.Review review=reviewService.createReview(req, user);

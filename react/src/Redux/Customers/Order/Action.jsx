@@ -72,10 +72,10 @@ export const getOrderById = (orderId) => async (dispatch) => {
   }
 };
 
-export const getOrderHistory = (reqData) => async (dispatch, getState) => {
+export const getOrderHistory = (status='') => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ORDER_HISTORY_REQUEST });
-    const { data } = await api.get(`/api/orders/user`);
+    const { data } = await api.get(`/api/orders/user?status=${status}`);
     console.log("Order history -------- ", data);
     dispatch({
       type: GET_ORDER_HISTORY_SUCCESS,

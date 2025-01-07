@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {getOrderById} from "../../Redux/Customers/Order/Action";
 import AddressCard from "../Address/AddressCard";
 import {createPayment} from "../../Redux/Customers/Payment/Action";
+import axios from "axios";
+import { createUrLPayment } from "../../until/common";
 
 const OrderSummary = () => {
     const navigate = useNavigate();
@@ -23,10 +25,15 @@ const OrderSummary = () => {
         dispatch(getOrderById(orderId))
     }, [orderId])
 
-    const handleCreatePayment = () => {
+    const handleCreatePayment = async () => {
+        const  url = await createUrLPayment(order.order?.totalDiscountedPrice, order.order?.id)
+        if(url){
+            window.location.href = url
+        }
         const data = {orderId: order.order?.id, jwt}
         dispatch(createPayment(data))
     }
+
 
     return (
         <div className="space-y-5">
@@ -51,11 +58,11 @@ const OrderSummary = () => {
                         <div className="space-y-3 font-semibold">
                             <div className="flex justify-between pt-3 text-black ">
                                 <span>Price ({order.order?.totalItem} item)</span>
-                                <span>₹{order.order?.totalPrice}</span>
+                                <span>{order.order?.totalPrice.toLocaleString('vi-VN')} VND</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Discount</span>
-                                <span className="text-green-700">-₹{order.order?.discounte}</span>
+                                <span className="text-green-700">{(order.order?.totalDiscountedPrice - order.order?.totalPrice).toLocaleString('vi-VN')} VND</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Delivery Charges</span>
@@ -64,7 +71,7 @@ const OrderSummary = () => {
                             <hr/>
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total Amount</span>
-                                <span className="text-green-700">₹{order.order?.totalDiscountedPrice}</span>
+                                <span className="text-green-700">{order.order?.totalDiscountedPrice.toLocaleString('vi-VN')} VND</span>
                             </div>
                         </div>
 

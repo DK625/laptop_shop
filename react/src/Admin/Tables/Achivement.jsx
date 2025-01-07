@@ -30,7 +30,7 @@ const Achivement = () => {
 
   return (
   
-       <Card sx={{ position: 'relative' }}>
+       <Card className='h-full' sx={{ position: 'relative' }}>
       <CardContent>
       <Typography variant='h6' sx={{ letterSpacing: '0.25px' }}>
           Shop With Zosh

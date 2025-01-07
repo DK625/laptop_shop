@@ -48,8 +48,8 @@ const Customers = () => {
                     <TableBody>
                         {auth.customers.map(item => (
                             <TableRow hover key={item.name} sx={{'&:last-of-type td, &:last-of-type th': {border: 0}}}>
-                                <TableCell> <Avatar>{item.firstName[0].toUpperCase()}</Avatar> </TableCell>
-                                <TableCell>{item.firstName} {item.lastName}</TableCell>
+                                <TableCell> <Avatar>{item?.name[0].toUpperCase()}</Avatar> </TableCell>
+                                <TableCell>{item.name}</TableCell>
                                 <TableCell>{item.email}</TableCell>
                             </TableRow>
                         ))}

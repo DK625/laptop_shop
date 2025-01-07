@@ -16,6 +16,12 @@ import RecentOrders from "../Tables/RecentOrders";
 import {BriefcaseVariantOutline, CurrencyUsd, HelpCircleOutline, Poll} from "mdi-material-ui";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
+import api from "../../Config/api";
+import AchivementYear from "../Tables/YearOverview";
+import YearOverview from "../Tables/YearOverview";
+import PieChart from "../Tables/PieChart";
 
 const darkTheme1 = createTheme({
     palette: {
@@ -34,24 +40,37 @@ const Dashboard = () => {
     const {auth} = useSelector(store => store);
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        const getData = async ()=>{
+            const res = await api.get(`/api/dashboard/yearly-revenue`)
+            const res2 = await api.get(`/api/dashboard/product-revenue-percentages`)
+            
+        }
+        getData()
+    },[])
+
     return (
         <div className="adminContainer ">
             <ThemeProvider theme={customTheme}>
                 <AdminPannel>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={7}>
                             <Achivement/>
                         </Grid>
-                        <Grid item xs={12} md={8}>
-                            <MonthlyOverview/>
+                        <Grid item xs={12} md={5}>
+                            <PieChart/>
                         </Grid>
+                        {/* <Grid item xs={12} md={8}>
+                            <MonthlyOverview/>
+                        </Grid> */}
                         <Grid item xs={12} md={6} lg={4}>
                             <WeeklyOverview/>
                         </Grid>
-                        <Grid item xs={12} md={6} lg={4}>
-                            <TotalEarning/>
+                        <Grid item xs={12} md={8}>
+                            <YearOverview/>
                         </Grid>
-                        <Grid item xs={12} md={6} lg={4}>
+                        
+                        {/* <Grid item xs={12} md={6} lg={4}>
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
                                     <CardStatsVertical
@@ -112,7 +131,7 @@ const Dashboard = () => {
 
                         <Grid item xs={12}>
                             <CustomersTable/>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </AdminPannel>
             </ThemeProvider>

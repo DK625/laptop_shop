@@ -14,7 +14,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Pagination from "@mui/material/Pagination";
 import TextField from '@mui/material/TextField';
-
+import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 import { filters, singleFilter, sortOptions } from "./FilterData";
 import LaptopCard from "../LaptopCard/LaptopCard";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -25,6 +25,7 @@ import {
   searchLaptop,
 } from "../../../Redux/Admin/Laptop/Action";
 import { Backdrop, CircularProgress } from "@mui/material";
+import SearchImage from "../../../Customer/SearchImage/SearchImage";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -35,16 +36,27 @@ export default function SearchLaptop() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {keyword} = useParams();
+  const { keyword } = useParams();
   const { laptop } = useSelector((store) => store);
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const [laptops, setLaptops] = useState([]);
+  const queryParams = new URLSearchParams(location.search);
+  const keySearch = queryParams.get('search');
+  const [isSearchImage, setIsSearchImage] = useState(false);
+
+
+
 
   const handleLoderClose = () => {
     setIsLoaderOpen(false);
   };
 
-  
+  useEffect(() => {
+    setLaptops(laptop?.searchLaptops)
+  }, [laptop])
+
+
   // console.log("location - ", colorValue, sizeValue,price,disccount);
 
   const handleSortChange = (value) => {
@@ -72,8 +84,12 @@ export default function SearchLaptop() {
     }
   }, [laptop?.loading]);
 
-  const handleSearch=(e)=>{
-    const keyword=e.target.value;
+  useEffect(() => {
+    dispatch(searchLaptop(keySearch))
+  }, [location]);
+
+  const handleSearch = (e) => {
+    const keyword = e.target.value;
     dispatch(searchLaptop(keyword))
     setTimeout(300)
   }
@@ -128,7 +144,7 @@ export default function SearchLaptop() {
                         as="div"
                         key={section.id}
                         className="border-t border-gray-200 px-4 py-6"
-                        // open={false}
+                      // open={false}
                       >
                         {({ open }) => (
                           <>
@@ -166,12 +182,12 @@ export default function SearchLaptop() {
                                       type="checkbox"
                                       defaultChecked={option.checked}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                      
+
                                     />
                                     <label
                                       htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                       className="ml-3 min-w-0 flex-1 text-gray-500"
-                                      // onClick={()=>handleFilter(option.value,section.id)}
+                                    // onClick={()=>handleFilter(option.value,section.id)}
                                     >
                                       {option.label}
                                     </label>
@@ -191,13 +207,18 @@ export default function SearchLaptop() {
         </Transition.Root>
 
         <main className="mx-auto px-4 lg:px-14 ">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          <div hidden={!isSearchImage}>
+            <SearchImage setValue={setLaptops} />
+          </div>
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-6">
+            {/* <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               Search Laptop
-            </h1>
+            </h1> */}
 
             <div className="flex items-center">
+              <div className="pr-3 cursor-pointer" onClick={() => setIsSearchImage(pre => !pre)}><ImageSearchIcon /></div>
               <Menu as="div" className="relative inline-block text-left">
+
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                     Sort
@@ -266,20 +287,20 @@ export default function SearchLaptop() {
             </h2>
 
             <div>
-              
+
               <div className=" gap-y-10 ">
-               
+
 
                 {/* Laptop grid */}
                 <div className=" w-full">
-                <TextField
+                  {/* <TextField
                       id="outlined-basic"
                       label="Search laptop..."
                       variant="outlined"
                       onChange={handleSearch}
-                    />
+                    /> */}
                   <div className="flex flex-wrap justify-center bg-white py-5 rounded-md ">
-                    {laptop?.searchLaptops?.map((item) => (
+                    {laptops?.map((item) => (
                       <LaptopCard laptop={item} />
                     ))}
                   </div>

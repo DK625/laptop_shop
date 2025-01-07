@@ -76,6 +76,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setWarranty(laptopDTO.getWarranty());
         laptop.setPrice(laptopDTO.getPrice());
         laptop.setDiscountPercent(laptopDTO.getDiscountPercent());
+        laptop.setStatus((short) 1);
         laptop.setCategories(laptopDTO.getCategories().stream().map(category -> {
             try {
                 return categoryService.getCategoryById(category.getId());
@@ -137,6 +138,7 @@ public class LaptopServiceImpl implements LaptopService {
         laptop.setWarranty(laptopDTO.getWarranty());
         laptop.setPrice(laptopDTO.getPrice());
         laptop.setDiscountPercent(laptopDTO.getDiscountPercent());
+        laptop.setStatus(laptopDTO.getStatus());
 
 //        Set<Gpu> updatedGpus = laptopDTO.getGpus().stream()
 //            .map(dto -> {
@@ -197,12 +199,13 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public void deleteLaptop(Integer id) throws LaptopException, IOException {
+    public void deleteLaptop(Integer id) throws LaptopException {
         if (!laptopRepository.existsById(id)) {
             throw new LaptopException("Laptop not found");
         }
-        imageStorageService.deleteLaptopDirectory(id);
-        laptopRepository.deleteById(id);
+        Laptop laptop = laptopRepository.findById(id).get();
+        laptop.setStatus((short) 0);
+        laptopRepository.saveAndFlush(laptop);
     }
 
     @Override
@@ -317,7 +320,8 @@ public class LaptopServiceImpl implements LaptopService {
                 laptop.getWarranty(),
                 laptop.getPrice(),
                 laptop.getImageUrls(),
-                laptop.getDiscountPercent()
+                laptop.getDiscountPercent(),
+                laptop.getStatus()
         );
     }
 }

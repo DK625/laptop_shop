@@ -30,7 +30,7 @@ public class RatingController {
 	private RatingService ratingService;
 
 	@PostMapping("/create")
-	public ResponseEntity<com.id.akn.model.Rating> createRatingHandler(@RequestBody RatingDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException{
+	public ResponseEntity<com.id.akn.model.Rating> createRatingHandler(@RequestBody(required = false) RatingDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException{
 		User user=userService.findUserProfileByJwt(jwt);
 		com.id.akn.model.Rating rating=ratingService.createRating(req, user);
 		return new ResponseEntity<>(rating,HttpStatus.ACCEPTED);

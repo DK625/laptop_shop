@@ -8,9 +8,31 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import DotsVertical from 'mdi-material-ui/DotsVertical'
 import ReactApexCharts from 'react-apexcharts';
+import { useEffect, useState } from 'react'
+import api from '../../Config/api'
 
 const WeeklyOverview = () => {
   const theme = useTheme();
+
+  const [reportYearly, setReportYearly] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [filter, setFilter] = useState({
+    year: new Date().getFullYear()
+  });
+  
+
+  useEffect(()=>{
+    const getData = async ()=>{
+        const res = await api.get(`/api/dashboard/yearly?year=${filter.year}`)
+        if(res.data.year){
+          const data = res.data.monthlyRevenueList.map((item)=> item.revenue)
+          setReportYearly(data)
+          setTotalRevenue(res.data.totalRevenue)
+        }
+    }
+    getData()
+},[])
+
 
   const options = {
     chart: {
@@ -58,7 +80,7 @@ const WeeklyOverview = () => {
       }
     },
     xaxis: {
-      categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      categories: ['Tháng 1', "Tháng 2",'Tháng 3', "Tháng 4",'Tháng 5', "Tháng 6",'Tháng 7', "Tháng 8",'Tháng 9', "Tháng 10",],
       tickPlacement: 'on',
       labels: { show: false },
       axisTicks: { show: false },
@@ -77,7 +99,7 @@ const WeeklyOverview = () => {
   return (
     <Card>
       <CardHeader
-        title='Weekly Overview'
+        title={new Date().getFullYear()}
         titleTypographyProps={{
           sx: { lineHeight: '0rem !important', letterSpacing: '0.15px !important' }
         }}
@@ -88,16 +110,16 @@ const WeeklyOverview = () => {
         }
       />
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexCharts  type='bar' height={201} options={options} series={[{ data: [37, 57, 45, 75, 57, 40, 65] }]} />
+        <ReactApexCharts  type='bar' height={201} options={options} series={[{ data: reportYearly }]} />
         <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
           <Typography variant='h5' sx={{ mr: 4 }}>
-            45%
+            Tổng doanh thu {totalRevenue.toLocaleString()} VND
           </Typography>
-          <Typography variant='body2'>Your sales performance is 45% 😎 better compared to last month</Typography>
+          {/* <Typography variant='body2'>T</Typography> */}
         </Box>
-        <Button fullWidth variant='contained'>
+        {/* <Button fullWidth variant='contained'>
           Details
-        </Button>
+        </Button> */}
       </CardContent>
     </Card>
   )
