@@ -3,7 +3,8 @@ import React, {useEffect, useState} from "react";
 import OrderCard from "./OrderCard";
 import {useDispatch, useSelector} from "react-redux";
 import {getOrderHistory} from "../../Redux/Customers/Order/Action";
-import { useNavigate } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
 
 const orderStatus = [
     {label: "PENDING", value: "PENDING"},
@@ -20,15 +21,26 @@ const Order = () => {
     const jwt = localStorage.getItem("jwt");
     const {order} = useSelector(store => store);
     const [status, setStatus] = useState('');
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page')?? 1;
     
+    console.log('cls-linh-order',page);
+
+    const handlePaginationChange = (event, value) => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set("page", value);
+        const query = searchParams.toString();
+        navigate({ search: `?${query}` });
+      };
     
 
     useEffect(() => {
-        dispatch(getOrderHistory(status));
+        dispatch(getOrderHistory(status,page));
         if(!jwt){
 navigate('/')
         }
-    }, [jwt,status]);
+    }, [jwt,status,page]);
     return (
         <Box className="px-10">
             <Grid container spacing={0} sx={{justifyContent: "space-between"}}>
@@ -66,6 +78,16 @@ navigate('/')
                     <div>Không có đơn hàng nào</div>
                     }
                     </Box>
+                    <section className="w-full px-[3.6rem]">
+                        <div className="mx-auto px-4 py-5 flex justify-center shadow-lg border rounded-md">
+                            <Pagination
+                            count={order.orders?.totalPages}
+                            color="primary"
+                            className=""
+                            onChange={handlePaginationChange}
+                            />
+                        </div>
+                    </section>
                 </Grid>
             </Grid>
         </Box>
