@@ -44,12 +44,12 @@ public class OrderController {
 
 	@GetMapping("/user")
 	public ResponseEntity<Page<Order>> userOrdersHistoryHandler(@RequestHeader("Authorization") String jwt,
-																 @RequestParam(value = "status", required = false) Order.PaymentStatus paymentStatus,
+																 @RequestParam(value = "status", required = false) Order.OrderStatus orderStatus,
 																 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 																 @RequestParam(value = "size", required = false, defaultValue = "10") int size) throws UserException{
 		
 		User user=userService.findUserProfileByJwt(jwt);
-		Page<Order> orders = orderService.userOrdersHistory(user.getId(), paymentStatus, page, size);
+		Page<Order> orders = orderService.userOrdersHistory(user.getId(), orderStatus, page, size);
 		return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
 	}
 	

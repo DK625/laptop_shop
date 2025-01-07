@@ -22,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findAllByOrderByCreatedAtDesc();
 	//Optional<Order> findByOrderId(String orderId);
-	Page<Order> findByPaymentStatusAndUserId(Order.PaymentStatus paymentStatus, Long userId, Pageable pageable);
+	Page<Order> findByOrderStatusAndUserId(Order.OrderStatus orderStatus, Long userId, Pageable pageable);
 	Page<Order> findByUserId(Long userId, Pageable pageable);
 	@Query("SELECT o FROM Order o WHERE (:paymentStatus IS NULL OR o.paymentStatus = :paymentStatus) AND o.user.id = :userId")
 	Page<Order> findAllByPaymentStatusAndUserId(
