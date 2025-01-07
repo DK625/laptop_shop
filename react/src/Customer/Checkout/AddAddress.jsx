@@ -126,8 +126,8 @@ export default function AddDeliveryAddressForm({ handleNext }) {
               onChange={handlePaymentMethodChange}
             >
               <FormControlLabel value="COD" control={<Radio />} label="COD" />
-              <FormControlLabel value="VISA" control={<Radio />} label="VISA" />
-              <FormControlLabel value="MasterCard" control={<Radio />} label="MasterCard" />
+              <FormControlLabel value="QR" control={<Radio />} label="QR CODE" />
+              {/* <FormControlLabel value="MasterCard" control={<Radio />} label="MasterCard" /> */}
             </RadioGroup>
           </FormControl>
           {error && (

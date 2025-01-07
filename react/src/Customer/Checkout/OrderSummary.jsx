@@ -19,19 +19,23 @@ const OrderSummary = () => {
     const jwt = localStorage.getItem("jwt");
     const {order} = useSelector(state => state)
 
-    console.log("orderId ", order.order)
-
     useEffect(() => {
         dispatch(getOrderById(orderId))
     }, [orderId])
 
+
     const handleCreatePayment = async () => {
-        const  url = await createUrLPayment(order.order?.totalDiscountedPrice, order.order?.id)
-        if(url){
-            window.location.href = url
+        if(order?.order?.paymentMethod === 'COD'){
+            navigate('/account/order')
+        }else{
+
+            const  url = await createUrLPayment(order.order?.totalDiscountedPrice, order.order?.id)
+            if(url){
+                window.location.href = url
+            }
+            const data = {orderId: order.order?.id, jwt}
+            dispatch(createPayment(data))
         }
-        const data = {orderId: order.order?.id, jwt}
-        dispatch(createPayment(data))
     }
 
 
@@ -81,7 +85,7 @@ const OrderSummary = () => {
                             type="submit"
                             sx={{padding: ".8rem 2rem", marginTop: "2rem", width: "100%"}}
                         >
-                            Payment
+                            {order?.order?.paymentMethod === 'COD'?"Xác nhận":"Thanh toán"}
                         </Button>
                     </div>
                 </div>

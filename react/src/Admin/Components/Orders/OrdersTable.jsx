@@ -127,14 +127,14 @@ const OrdersTable = () => {
                                                 }}
                                             >
                                                 {item?.orderItems.map((order) => (
-                                                    <span className=""> {order?.laptop.model},</span>
+                                                    <span className=""> {order?.laptop.model}</span>
                                                 ))}
                                             </Typography>
                                             <Typography variant="caption">
                                                 {item?.orderItems.map((order) => (
                                                     <span className="opacity-60">
                             {" "}
-                                                        {order.laptop.brand.name},
+                                                        {order.laptop.brand.name}
                           </span>
                                                 ))}
                                             </Typography>
