@@ -36,4 +36,5 @@ public interface LaptopRepository extends JpaRepository<Laptop, Integer>, JpaSpe
 
     @Query(value = "SELECT COUNT(*) FROM laptop", nativeQuery = true)
     Long getTotalProduct();
+    boolean existsLaptopByModel(String model);
 }
