@@ -10,6 +10,8 @@ const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const jwt = localStorage.getItem("jwt");
+    console.log('cls-linh-jwt',jwt);
+    
     const { cart } = useSelector(store => store.cart);
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -18,6 +20,9 @@ const Cart = () => {
     // Lấy danh sách giỏ hàng khi component được mount
     useEffect(() => {
         dispatch(getCart(jwt));
+        if(!jwt){
+            navigate('/')
+        }
     }, [jwt, dispatch]);
 
     // Xử lý thay đổi checkbox
@@ -43,7 +48,7 @@ const Cart = () => {
 
     return (
         <div className="">
-            {cart?.length > 0 && (
+            {cart?.length > 0 ? (
                 <div className="lg:grid grid-cols-3 lg:px-16 relative">
                     <div className="lg:col-span-2 lg:px-5 bg-white">
                         <div className="space-y-3">
@@ -86,7 +91,7 @@ const Cart = () => {
                         </div>
                     </div>
                 </div>
-            )}
+            ):<div className="flex w-full justify-center">Không có sản phẩm nào trong giỏ hàng</div>}
         </div>
     );
 };

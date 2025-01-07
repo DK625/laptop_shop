@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import OrderCard from "./OrderCard";
 import {useDispatch, useSelector} from "react-redux";
 import {getOrderHistory} from "../../Redux/Customers/Order/Action";
+import { useNavigate } from "react-router-dom";
 
 const orderStatus = [
     {label: "PENDING", value: "PENDING"},
@@ -15,6 +16,7 @@ const orderStatus = [
 
 const Order = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const jwt = localStorage.getItem("jwt");
     const {order} = useSelector(store => store);
     const [status, setStatus] = useState('');
@@ -23,6 +25,9 @@ const Order = () => {
 
     useEffect(() => {
         dispatch(getOrderHistory(status));
+        if(!jwt){
+navigate('/')
+        }
     }, [jwt,status]);
     return (
         <Box className="px-10">
@@ -54,9 +59,12 @@ const Order = () => {
                 </Grid>
                 <Grid item xs={9}>
                     <Box className="space-y-5 ">
-                        {order.orders?.content?.length > 0 && order.orders?.content?.map((order) => {
-                            return order?.orderItems?.map((item, index) => <OrderCard item={item} order={order}/>)
-                        })}
+                        {order.orders?.content?.length > 0 ? 
+                       order.orders?.content?.map((order) => {
+                        return order?.orderItems?.map((item, index) => <OrderCard item={item} order={order}/>)
+                    }) :
+                    <div>Không có đơn hàng nào</div>
+                    }
                     </Box>
                 </Grid>
             </Grid>

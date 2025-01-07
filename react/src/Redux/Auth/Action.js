@@ -52,6 +52,7 @@ export const login = (userData) => async (dispatch) => {
     const user = response.data;
     if (user.jwt) localStorage.setItem("jwt", user.jwt);
     dispatch(loginSuccess(user));
+    window.location.reload()
   } catch (error) {
     const errorMessage = extractErrorMessage(error);
     dispatch(loginFailure(errorMessage));

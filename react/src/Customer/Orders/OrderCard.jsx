@@ -14,12 +14,12 @@ const OrderCard = ({ item, order }) => {
       <Grid spacing={2} container sx={{ justifyContent: "space-between" }}>
         <Grid item xs={6}>
           <div
-            onClick={() => navigate(`/account/order/${order?.id}`)}
+            // onClick={() => navigate(`/account/order/${order?.id}`)}
             className="flex cursor-pointer"
           >
             <img
               className="w-[5rem] h-[5rem] object-cover object-top"
-              src={item?.laptop.imageUrls[0]}
+              src={'http://14.225.29.152:8080'+item?.laptop.imageUrls[0]}
               alt=""
             />
             <div className="ml-5">
@@ -41,7 +41,7 @@ const OrderCard = ({ item, order }) => {
           </p>
           {item.orderStatus === "DELIVERED" && (
             <div
-              onClick={() => navigate(`/account/rate/{id}`)}
+              // onClick={() => navigate(`/account/rate/{id}`)}
               className="flex items-center text-blue-600 cursor-pointer"
             >
               <StarIcon sx={{ fontSize: "2rem" }} className="px-2 text-5xl" />

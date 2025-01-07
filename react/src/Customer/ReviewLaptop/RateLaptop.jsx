@@ -75,14 +75,14 @@ const RateLaptop = () => {
             <p>₹{customersLaptop.laptop?.price}</p>
             <p>Size: Free</p>
            {customersLaptop.laptop?.color && <p>Color: {customersLaptop.laptop?.color}</p>}
-            <div className="flex items-center space-x-3">
+            {/* <div className="flex items-center space-x-3">
               <Rating name="read-only" value={4.6} precision={0.5} readOnly />
 
               <p className="opacity-60 text-sm">42807 Ratings</p>
               <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                 {3789} reviews
               </p>
-            </div>
+            </div> */}
             <div>
               <p className="space-y-2 font-semibold">
                 <FiberManualRecordIcon

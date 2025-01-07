@@ -199,7 +199,7 @@ export default function LaptopDetails() {
                             </div>
 
                             {/* Reviews */}
-                            <div className="mt-6">
+                            {/* <div className="mt-6">
                                 <h3 className="sr-only">Reviews</h3>
                                 <div className="flex items-center space-x-3">
                                     <Rating name="read-only" value={4.6} precision={0.5} readOnly />
@@ -208,7 +208,7 @@ export default function LaptopDetails() {
                                         {reviews.totalCount} reviews
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <form className="mt-10" onSubmit={handleSubmit}>
                                 {/* Color */}

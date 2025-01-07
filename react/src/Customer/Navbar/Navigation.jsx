@@ -102,12 +102,13 @@ export default function Navigation() {
     };
     const handleMyOrderClick = () => {
         handleCloseUserMenu();
-        auth.user?.role === "ADMIN"
-            ? navigate("/admin")
-            : navigate("/account/order");
+        navigate("/account/order");
     };
 
-
+    const handleAdminClick = () => {
+        handleCloseUserMenu();
+        navigate("/admin")
+    };
 
     return (
         <div className="bg-white pb-10">
@@ -351,11 +352,12 @@ export default function Navigation() {
                                                 MenuListProps={{
                                                     "aria-labelledby": "basic-button",
                                                 }}
-                                            >
+                                            >{auth.user?.role === "ADMIN"&&
+                                                <MenuItem onClick={handleAdminClick}>
+                                                    Admin Dashboard
+                                                </MenuItem>}
                                                 <MenuItem onClick={handleMyOrderClick}>
-                                                    {auth.user?.role === "ADMIN"
-                                                        ? "Admin Dashboard"
-                                                        : "My Orders"}
+                                                    My Orders
                                                 </MenuItem>
                                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                                             </Menu>
