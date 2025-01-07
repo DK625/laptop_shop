@@ -66,8 +66,9 @@ public class Order {
 		NCB,
 		MasterCard,
 		JCB,
-		EXIMBANK	,
-		COD
+		EXIMBANK,
+		COD,
+		QR
 	}
 	public enum PaymentStatus {
 		PENDING,
