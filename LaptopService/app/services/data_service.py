@@ -6,6 +6,8 @@ import faiss
 import sqlite3
 import logging
 
+from app.model import LaptopImage
+
 logger = logging.getLogger(__name__)
 
 def get_embedding_from_file(model, file_stream):
@@ -41,10 +43,15 @@ def get_image_names_from_db(indices):
 
 
 def get_laptops_from_images(image_names):
-    from app.model import Book
-    books = []
+    from app.model import Laptop
+    from sqlalchemy import or_
+    laptops = []
     try:
-        books = Book.query.filter(Book.image.in_(image_names)).all()
+        # Tạo điều kiện OR cho mỗi image_name
+        like_conditions = [LaptopImage.image_url.like(f'%{image_name}') for image_name in image_names]
+        # Query với điều kiện OR
+        laptops = Laptop.query.join(LaptopImage).filter(or_(*like_conditions)).all()
     except Exception as e:
         logger.error(f"Database error: {str(e)}")
-    return [book.to_dict() for book in books]
+        print(e)
+    return [laptop.to_dict() for laptop in laptops]

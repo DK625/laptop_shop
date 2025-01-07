@@ -36,27 +36,27 @@ export default function SearchLaptop() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {keyword} = useParams();
+  const { keyword } = useParams();
   const { laptop } = useSelector((store) => store);
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [laptops, setLaptops] = useState([]);
-  const queryParams = new URLSearchParams(location.search);  
+  const queryParams = new URLSearchParams(location.search);
   const keySearch = queryParams.get('search');
   const [isSearchImage, setIsSearchImage] = useState(false);
-  
 
-  
+
+
 
   const handleLoderClose = () => {
     setIsLoaderOpen(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setLaptops(laptop?.searchLaptops)
-  },[laptop])
+  }, [laptop])
 
-  
+
   // console.log("location - ", colorValue, sizeValue,price,disccount);
 
   const handleSortChange = (value) => {
@@ -88,8 +88,8 @@ export default function SearchLaptop() {
     dispatch(searchLaptop(keySearch))
   }, [location]);
 
-  const handleSearch=(e)=>{
-    const keyword=e.target.value;
+  const handleSearch = (e) => {
+    const keyword = e.target.value;
     dispatch(searchLaptop(keyword))
     setTimeout(300)
   }
@@ -144,7 +144,7 @@ export default function SearchLaptop() {
                         as="div"
                         key={section.id}
                         className="border-t border-gray-200 px-4 py-6"
-                        // open={false}
+                      // open={false}
                       >
                         {({ open }) => (
                           <>
@@ -182,12 +182,12 @@ export default function SearchLaptop() {
                                       type="checkbox"
                                       defaultChecked={option.checked}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                      
+
                                     />
                                     <label
                                       htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                       className="ml-3 min-w-0 flex-1 text-gray-500"
-                                      // onClick={()=>handleFilter(option.value,section.id)}
+                                    // onClick={()=>handleFilter(option.value,section.id)}
                                     >
                                       {option.label}
                                     </label>
@@ -208,7 +208,7 @@ export default function SearchLaptop() {
 
         <main className="mx-auto px-4 lg:px-14 ">
           <div hidden={!isSearchImage}>
-          <SearchImage setValue={setLaptops}/>
+            <SearchImage setValue={setLaptops} />
           </div>
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6">
             {/* <h1 className="text-4xl font-bold tracking-tight text-gray-900">
@@ -216,7 +216,7 @@ export default function SearchLaptop() {
             </h1> */}
 
             <div className="flex items-center">
-              <div className="pr-3 cursor-pointer" onClick={()=>setIsSearchImage(pre=>!pre)}><ImageSearchIcon/></div>
+              <div className="pr-3 cursor-pointer" onClick={() => setIsSearchImage(pre => !pre)}><ImageSearchIcon /></div>
               <Menu as="div" className="relative inline-block text-left">
 
                 <div>
@@ -287,13 +287,13 @@ export default function SearchLaptop() {
             </h2>
 
             <div>
-              
+
               <div className=" gap-y-10 ">
-               
+
 
                 {/* Laptop grid */}
                 <div className=" w-full">
-                {/* <TextField
+                  {/* <TextField
                       id="outlined-basic"
                       label="Search laptop..."
                       variant="outlined"

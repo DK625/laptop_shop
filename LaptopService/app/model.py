@@ -1,45 +1,64 @@
 from app.db import db
+from datetime import datetime
 
-class Book(db.Model):
-    __tablename__ = 'book'
+
+class LaptopImage(db.Model):
+    __tablename__ = 'laptop_images'
+
+    laptop_id = db.Column(db.Integer, db.ForeignKey('laptop.id'), primary_key=True)
+    image_url = db.Column(db.String(255), primary_key=True)
+
+
+class Laptop(db.Model):
+    __tablename__ = 'laptop'
 
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(255), nullable=True)
-    average_rating = db.Column(db.Float, nullable=True)
-    book_name = db.Column(db.String(255), nullable=True)
-    category = db.Column(db.String(255), nullable=True)
-    created_date = db.Column(db.DateTime, nullable=True)
-    description = db.Column(db.Text, nullable=True)
-    discount = db.Column(db.Integer, nullable=True)
-    discount_price = db.Column(db.Float, nullable=True)
-    formatted_discount_price = db.Column(db.String(255), nullable=True)
-    formatted_price = db.Column(db.String(255), nullable=True)
-    image = db.Column(db.String(255), nullable=True)
-    isbn = db.Column(db.String(255), nullable=True)
-    is_active = db.Column(db.Boolean, nullable=True)
-    price = db.Column(db.Float, nullable=True)
-    publisher = db.Column(db.String(255), nullable=True)
-    sold = db.Column(db.Integer, nullable=True)
-    stock = db.Column(db.Integer, nullable=True)
+    model = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.SmallInteger, default=1)
+    brand_id = db.Column(db.Integer)
+    cpu_id = db.Column(db.Integer)
+    ram_memory = db.Column(db.SmallInteger)
+    ram_detail = db.Column(db.String(255))
+    disk_capacity = db.Column(db.SmallInteger)
+    disk_detail = db.Column(db.String(255), nullable=False)
+    screen_size = db.Column(db.Float)
+    screen_detail = db.Column(db.String(255), nullable=False)
+    os_version_id = db.Column(db.Integer)
+    keyboard_type = db.Column(db.String(255))
+    battery_charger = db.Column(db.String(255))
+    design = db.Column(db.String(255))
+    origin = db.Column(db.String(255))
+    warranty = db.Column(db.SmallInteger)
+    price = db.Column(db.BigInteger)
+    discount_percent = db.Column(db.Float)
+    num_ratings = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime)
+
+    # Relationships
+    images = db.relationship('LaptopImage', lazy='joined')
 
     def to_dict(self):
         return {
             "id": self.id,
-            "author": self.author,
-            "average_rating": self.average_rating,
-            "book_name": self.book_name,
-            "category": self.category,
-            "created_date": self.created_date.isoformat() if self.created_date else None,
-            "description": self.description,
-            "discount": self.discount,
-            "discount_price": self.discount_price,
-            "formatted_discount_price": self.formatted_discount_price,
-            "formatted_price": self.formatted_price,
-            "image": self.image,
-            "isbn": self.isbn,
-            "is_active": self.is_active,
+            "model": self.model,
+            "status": self.status,
+            "brand_id": self.brand_id,  # thay vì dùng brand.to_dict()
+            "cpu_id": self.cpu_id,  # thay vì dùng cpu.to_dict()
+            "ramMemory": self.ram_memory,
+            "ramDetail": self.ram_detail,
+            "diskCapacity": self.disk_capacity,
+            "diskDetail": self.disk_detail,
+            "screenSize": self.screen_size,
+            "screenDetail": self.screen_detail,
+            "osVersionId": self.os_version_id,  # thay vì dùng os_version.to_dict()
+            "keyboardType": self.keyboard_type,
+            "batteryCharger": self.battery_charger,
+            "design": self.design,
+            "origin": self.origin,
+            "warranty": self.warranty,
             "price": self.price,
-            "publisher": self.publisher,
-            "sold": self.sold,
-            "stock": self.stock,
+            "discountPercent": self.discount_percent,
+            "numRatings": self.num_ratings,
+            "createdAt": self.created_at.isoformat() if self.created_at else None,
+            "imageUrls": [img.image_url for img in self.images]
         }
