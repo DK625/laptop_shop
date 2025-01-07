@@ -87,7 +87,7 @@ const UpdateLaptopForm = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const baseUrl = "http://14.225.29.152:8080/";
+        const baseUrl = "http://localhost:8080/";
         const [
           brandsRes,
           colorsRes,

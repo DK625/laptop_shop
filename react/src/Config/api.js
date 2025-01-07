@@ -1,6 +1,6 @@
 import axios from 'axios';
 const DEPLOYED = 'https://akn.id.com'
-const LOCALHOST = 'http://14.225.29.152:8080'
+const LOCALHOST = 'http://localhost:8080'
 export const API_BASE_URL = LOCALHOST
 
 const api = axios.create({

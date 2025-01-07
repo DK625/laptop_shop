@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 
 const OrderCard = ({ item, order }) => {
-  
+
   const navigate = useNavigate();
-  console.log("items ", item,order,order.orderStatus);
+  console.log("items ", item, order, order.orderStatus);
   return (
     <Box className="p-5 shadow-lg hover:shadow-2xl border ">
       <Grid spacing={2} container sx={{ justifyContent: "space-between" }}>
@@ -19,7 +19,7 @@ const OrderCard = ({ item, order }) => {
           >
             <img
               className="w-[5rem] h-[5rem] object-cover object-top"
-              src={'http://14.225.29.152:8080'+item?.laptop.imageUrls[0]}
+              src={'http://localhost:8080' + item?.laptop.imageUrls[0]}
               alt=""
             />
             <div className="ml-5">
@@ -33,11 +33,11 @@ const OrderCard = ({ item, order }) => {
         </Grid>
 
         <Grid item xs={2}>
-          <p>{((100 - item.laptop?.discountPercent)*item.laptop?.price/100)?.toLocaleString('vi-VN')} VND</p>
+          <p>{((100 - item.laptop?.discountPercent) * item.laptop?.price / 100)?.toLocaleString('vi-VN')} VND</p>
         </Grid>
         <Grid item xs={4}>
           <p className="space-y-2 font-semibold">
-           <div>{order?.orderStatus}</div>
+            <div>{order?.orderStatus}</div>
           </p>
           {item.orderStatus === "DELIVERED" && (
             <div

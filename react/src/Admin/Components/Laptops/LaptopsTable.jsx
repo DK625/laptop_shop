@@ -158,7 +158,7 @@ const LaptopsTable = () => {
                     {" "}
                     <Avatar
                       alt={item.model}
-                      src={"http://14.225.29.152:8080" + item.imageUrls[0]}
+                      src={"http://localhost:8080" + item.imageUrls[0]}
                     />{" "}
                   </TableCell>
 

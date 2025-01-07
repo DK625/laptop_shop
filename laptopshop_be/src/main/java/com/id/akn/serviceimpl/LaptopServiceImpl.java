@@ -49,10 +49,14 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public LaptopDTO createLaptop(LaptopDTO laptopDTO) throws OsVersionException, BrandException, CpuException, ColorException {
+    public LaptopDTO createLaptop(LaptopDTO laptopDTO) throws OsVersionException, BrandException, CpuException, ColorException, LaptopException {
 
         Laptop laptop = new Laptop();
         laptop.setBrand(brandService.getBrandById(laptopDTO.getBrandId()));
+        
+        if(laptopRepository.existsLaptopByModel(laptopDTO.getModel())){
+            throw new LaptopException("Model Laptop is existed");
+        }
         laptop.setModel(laptopDTO.getModel());
         laptop.setCpu(cpuService.getCpuById(laptopDTO.getCpu().getId()));
         laptop.setGpus(laptopDTO.getGpus().stream().map(gpu -> {

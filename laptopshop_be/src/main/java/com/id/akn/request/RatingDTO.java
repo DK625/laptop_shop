@@ -8,4 +8,5 @@ import lombok.*;
 public class RatingDTO {
 	private Integer laptopId;
 	private float rating;
+	private Long orderId;
 }

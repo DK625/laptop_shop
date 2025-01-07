@@ -8,4 +8,5 @@ import lombok.*;
 public class ReviewDTO {
 	private Integer laptopId;
 	private String review;
+	private Long orderId;
 }

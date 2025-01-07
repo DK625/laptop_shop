@@ -2,6 +2,7 @@ package com.id.akn.controller;
 
 import java.util.List;
 
+import com.id.akn.exception.OrderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class RatingController {
 	private RatingService ratingService;
 
 	@PostMapping("/create")
-	public ResponseEntity<com.id.akn.model.Rating> createRatingHandler(@RequestBody(required = false) RatingDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException{
+	public ResponseEntity<com.id.akn.model.Rating> createRatingHandler(@RequestBody(required = false) RatingDTO req, @RequestHeader("Authorization") String jwt) throws UserException, LaptopException, OrderException {
 		User user=userService.findUserProfileByJwt(jwt);
 		com.id.akn.model.Rating rating=ratingService.createRating(req, user);
 		return new ResponseEntity<>(rating,HttpStatus.ACCEPTED);
