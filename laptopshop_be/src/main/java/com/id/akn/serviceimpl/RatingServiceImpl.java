@@ -35,7 +35,7 @@ public class RatingServiceImpl implements RatingService {
 		for(int i = 0; i < order.size(); ++i) {
 			List<OrderItem> tmp = order.get(i).getOrderItems();
 			for(int j = 0; j < tmp.size(); ++i) {
-				if(Objects.equals(tmp.get(j).getLaptop().getId(), req.getLaptopId())) {
+				if(!Objects.equals(tmp.get(j).getLaptop().getId(), req.getLaptopId())) {
 					throw new OrderException("You cannot review this product");
 				}
 				else {
