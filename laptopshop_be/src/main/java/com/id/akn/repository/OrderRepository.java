@@ -3,6 +3,7 @@ package com.id.akn.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.id.akn.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,15 +23,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findAllByOrderByCreatedAtDesc();
 	//Optional<Order> findByOrderId(String orderId);
-	Page<Order> findByPaymentStatusAndUserId(Order.PaymentStatus paymentStatus, Long userId, Pageable pageable);
+	Page<Order> findByOrderStatusAndUserIdOrderByCreatedAtDesc(Order.OrderStatus orderStatus, Long userId, Pageable pageable);
 	Page<Order> findByUserId(Long userId, Pageable pageable);
-	@Query("SELECT o FROM Order o WHERE (:paymentStatus IS NULL OR o.paymentStatus = :paymentStatus) AND o.user.id = :userId")
+	@Query("SELECT o FROM Order o WHERE (:paymentStatus IS NULL OR o.paymentStatus = :paymentStatus) AND o.user.id = :userId order by o.createdAt desc")
 	Page<Order> findAllByPaymentStatusAndUserId(
 			@Param("paymentStatus") Order.PaymentStatus paymentStatus,
 			@Param("userId") Long userId,
 			Pageable pageable
 	);
 
+	List<Order> findOrderByUser(User user);
 
 	@Modifying
 	@Query("UPDATE Order o SET o.orderStatus = :orderStatus, o.paymentStatus = :paymentStatus WHERE o.id = :orderId AND o.user.id = :userId")

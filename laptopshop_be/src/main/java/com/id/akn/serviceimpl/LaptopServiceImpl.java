@@ -53,7 +53,7 @@ public class LaptopServiceImpl implements LaptopService {
 
         Laptop laptop = new Laptop();
         laptop.setBrand(brandService.getBrandById(laptopDTO.getBrandId()));
-        
+
         if(laptopRepository.existsLaptopByModel(laptopDTO.getModel())){
             throw new LaptopException("Model Laptop is existed");
         }
@@ -104,8 +104,8 @@ public class LaptopServiceImpl implements LaptopService {
         Laptop savedLaptop = laptopRepository.save(laptop);
         System.out.println("BREAKPOINT2");
         for(LaptopColor lc : laptopColors){
-           lc.setLaptop(laptop);
-           laptopColorRepository.save(lc);
+            lc.setLaptop(laptop);
+            laptopColorRepository.save(lc);
         }
 
         return convertToDTO(savedLaptop);
@@ -214,9 +214,9 @@ public class LaptopServiceImpl implements LaptopService {
 
     @Override
     public Page<LaptopDTO> getAllLaptop(List<String> colors, String category, Float discountPercentMin, Float discountPercentMax, List<Float> screenSize, Long minPrice, Long maxPrice,
-                                        Short stockStatus, String sortPrice, Pageable pageable) {
+                                        Short stockStatus, String sortPrice, Byte minRamMemory, Byte maxRamMemory, Short cpuId, List<Short> gpuIds,
+                                        Short minDiskCapacity, Short maxDiskCapacity, Byte brandId, Pageable pageable) {
 
-        // Xây dựng Specification
         Specification<Laptop> specification = Specification.where(null);
 
         specification = addCondition(specification, colors != null && !colors.isEmpty(),
@@ -228,7 +228,6 @@ public class LaptopServiceImpl implements LaptopService {
 
         specification = addCondition(specification, category != null,
                 (root, query, cb) -> cb.equal(root.join("categories").get("name"), category));
-
 
         specification = addCondition(specification, discountPercentMin != null,
                 (root, query, cb) -> cb.between(root.get("discountPercent"), discountPercentMin, discountPercentMax));
@@ -242,17 +241,15 @@ public class LaptopServiceImpl implements LaptopService {
                     return cb.greaterThan(laptopColorsJoin.get("quantity"), 0);
                 });
 
-
         specification = addCondition(specification, screenSize != null && !screenSize.isEmpty(),
                 (root, query, cb) -> {
                     Predicate predicate = cb.disjunction();
-                    assert screenSize != null;
                     for (Float size : screenSize) {
                         predicate = cb.or(predicate, cb.between(root.get("screenSize"), size - 0.05, size + 0.05));
                     }
                     return predicate;
                 });
-        
+
         specification = addCondition(specification, minPrice != null && maxPrice != null,
                 (root, query, cb) -> cb.between(root.get("price"), minPrice, maxPrice));
 
@@ -266,17 +263,36 @@ public class LaptopServiceImpl implements LaptopService {
                     return null;
                 });
 
+        specification = addCondition(specification, minRamMemory != null && maxRamMemory != null,
+                (root, query, cb) -> cb.between(root.get("ramMemory"), minRamMemory, maxRamMemory));
 
-        // Thực hiện truy vấn với Specification và Pageable
+        specification = addCondition(specification, cpuId != null,
+                (root, query, cb) -> cb.equal(root.join("cpu").get("id"), cpuId));
+
+        specification = addCondition(specification, gpuIds != null && !gpuIds.isEmpty(),
+                (root, query, cb) -> root.join("gpus").get("id").in(gpuIds));
+
+        specification = addCondition(specification, minDiskCapacity != null && maxDiskCapacity != null,
+                (root, query, cb) -> cb.between(root.get("diskCapacity"), minDiskCapacity, maxDiskCapacity));
+
+        specification = addCondition(specification, brandId != null,
+                (root, query, cb) -> cb.equal(root.join("brand").get("id"), brandId));
+
         Page<Laptop> laptopPage = laptopRepository.findAll(specification, pageable);
 
-        // Chuyển đổi từ Laptop sang LaptopDTO bằng hàm riêng
         List<LaptopDTO> laptopDTOs = laptopPage.getContent().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(laptopDTOs, pageable, laptopPage.getTotalElements());
     }
+
+    // Hàm addCondition bổ trợ
+    private Specification<Laptop> addCondition(Specification<Laptop> specification, boolean condition,
+                                               Specification<Laptop> newSpecification) {
+        return condition ? specification.and(newSpecification) : specification;
+    }
+
 
     @Override
     public List<LaptopDTO> searchLaptop(String query) {
@@ -291,10 +307,6 @@ public class LaptopServiceImpl implements LaptopService {
                 .limit(10)
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
-    }
-    private Specification<Laptop> addCondition(Specification<Laptop> spec, boolean condition,
-                                               Specification<Laptop> newSpec) {
-        return condition ? spec.and(newSpec) : spec;
     }
 
     public LaptopDTO convertToDTO(Laptop laptop) {

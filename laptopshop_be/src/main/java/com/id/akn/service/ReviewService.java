@@ -8,6 +8,6 @@ import com.id.akn.model.User;
 import com.id.akn.request.ReviewDTO;
 
 public interface ReviewService {
-	public com.id.akn.model.Review createReview(ReviewDTO req, User user) throws LaptopException, OrderException;
-	public List<com.id.akn.model.Review> getLaptopReviews(Long laptopId);
+	com.id.akn.model.Review createReview(ReviewDTO req, User user) throws LaptopException, OrderException;
+	List<com.id.akn.model.Review> getLaptopReviews(Long laptopId);
 }
