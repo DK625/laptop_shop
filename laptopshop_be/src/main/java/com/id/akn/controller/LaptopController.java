@@ -43,13 +43,22 @@ public class LaptopController {
 			@RequestParam(required = false) Long maxPrice,
 			@RequestParam(required = false) Short stockStatus,
 			@RequestParam(required = false) String sortPrice,
+			@RequestParam(required = false) Byte minRamMemory,
+			@RequestParam(required = false) Byte maxRamMemory,
+			@RequestParam(required = false) Short cpuId,
+			@RequestParam(required = false) List<Short> gpuIds,
+			@RequestParam(required = false) Short minDiskCapacity,
+			@RequestParam(required = false) Short maxDiskCapacity,
+			@RequestParam(required = false) Byte brandId,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false, defaultValue = "10") Integer size) {
 
 		Pageable pageable = PageRequest.of(page - 1, size);
 
 		Page<LaptopDTO> laptops = laptopService.getAllLaptop(
-				colors, category, discountPercentMin, discountPercentMax, screenSize, minPrice, maxPrice, stockStatus, sortPrice, pageable);
+				colors, category, discountPercentMin, discountPercentMax, screenSize, minPrice, maxPrice,
+				stockStatus, sortPrice, minRamMemory, maxRamMemory, cpuId, gpuIds,
+				minDiskCapacity, maxDiskCapacity, brandId, pageable);
 
 		return ResponseEntity.ok(laptops);
 	}

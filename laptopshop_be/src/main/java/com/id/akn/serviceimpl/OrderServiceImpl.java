@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 	public Page<Order> userOrdersHistory(Long userId, Order.OrderStatus  orderStatus, int page, int size)  {
 		Pageable pageable = PageRequest.of(page - 1, size);
 		if (orderStatus != null) {
-			return orderRepository.findByOrderStatusAndUserId(orderStatus, userId, pageable);
+			return orderRepository.findByOrderStatusAndUserIdOrderByCreatedAtDesc(orderStatus, userId, pageable);
 		} else {
 			return orderRepository.findByUserId(userId, pageable);
 		}

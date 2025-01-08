@@ -23,5 +23,7 @@ public interface LaptopService {
 	List<LaptopDTO> searchLaptop(String query);
 	List<LaptopDTO> getTop10LaptopsByDiscount() ;
 
-	Page<LaptopDTO> getAllLaptop(List<String> colors, String category, Float discountPercentMin, Float discountPercentMax, List<Float> screenSize, Long minPrice, Long maxPrice, Short stockStatus, String sortPrice, Pageable pageable);
+	Page<LaptopDTO> getAllLaptop(List<String> colors, String category, Float discountPercentMin, Float discountPercentMax, List<Float> screenSize, Long minPrice, Long maxPrice,
+								 Short stockStatus, String sortPrice, Byte minRamMemory, Byte maxRamMemory, Short cpuId, List<Short> gpuIds,
+								 Short minDiskCapacity, Short maxDiskCapacity, Byte brandId, Pageable pageable);
 }
