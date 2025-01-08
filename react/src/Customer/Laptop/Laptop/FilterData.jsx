@@ -1,3 +1,5 @@
+import api from "../../../Config/api";
+
 export const color = [
   "white",
   "Black",
@@ -8,6 +10,8 @@ export const color = [
   "Green",
   "Yellow",
 ];
+
+
 
 export const filters = [
   {
@@ -35,6 +39,16 @@ export const filters = [
   // },
   
 ];
+
+const getColor = async()=>{
+  const res = await api.get('/colors')
+
+  if(res?.data){
+    filters[0].options = res.data.map((item)=>({value:item.name,label:item.name}))
+  }
+}
+
+getColor()
 
 export const singleFilter=[
   {

@@ -39,7 +39,7 @@ const YearOverview = () => {
       bar: {
         borderRadius: 9,
         distributed: true,
-        columnWidth: '40%',
+        columnWidth: '30px',
         endingShape: 'rounded',
         startingShape: 'rounded'
       }
@@ -59,14 +59,9 @@ const YearOverview = () => {
       }
     },
     dataLabels: { enabled: false },
-    colors: [
-      theme.palette.background.default,
-      theme.palette.background.default,
-      theme.palette.background.default,
-      theme.palette.primary.main,
-      theme.palette.background.default,
-      theme.palette.background.default
-    ],
+    // colors: [
+    //   'red', 'blue','white'
+    // ],
     states: {
       hover: {
         filter: { type: 'none' }
@@ -78,7 +73,7 @@ const YearOverview = () => {
     xaxis: {
       categories: lables,
       tickPlacement: 'on',
-      labels: { show: false },
+      labels: { show: true },
       axisTicks: { show: false },
       axisBorder: { show: false }
     },

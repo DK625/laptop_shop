@@ -28,6 +28,9 @@ public class JwtValidator extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+		if ("Bearer null".equals(jwt)) {
+			jwt = null;
+		}
 		if (jwt != null) {
 			jwt = jwt.substring(7); // Loại bỏ tiền tố "Bearer "
 			try {

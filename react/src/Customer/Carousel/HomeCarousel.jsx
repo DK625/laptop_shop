@@ -33,7 +33,7 @@ const HomeCarousel = () => {
         <img
             key={index}
             className="w-full h-full object-cover cursor-pointer rounded-md"
-            onClick={() => navigate(item.path)}
+            // onClick={() => navigate(item.path)}
             src={item.image}
             alt={`Slide ${index + 1}`}
             onDragStart={handleDragStart}

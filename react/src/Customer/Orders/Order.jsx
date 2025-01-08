@@ -3,6 +3,8 @@ import React, {useEffect, useState} from "react";
 import OrderCard from "./OrderCard";
 import {useDispatch, useSelector} from "react-redux";
 import {getOrderHistory} from "../../Redux/Customers/Order/Action";
+import { useLocation,useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
 
 const orderStatus = [
     {label: "PENDING", value: "PENDING"},
@@ -15,16 +17,30 @@ const orderStatus = [
 
 const Order = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const jwt = localStorage.getItem("jwt");
     const {order} = useSelector(store => store);
     const [status, setStatus] = useState('');
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page')?? 1;
     
-    console.log("cls-linh-order", order);
+    console.log('cls-linh-order',page);
+
+    const handlePaginationChange = (event, value) => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set("page", value);
+        const query = searchParams.toString();
+        navigate({ search: `?${query}` });
+      };
     
 
     useEffect(() => {
-        dispatch(getOrderHistory(status));
-    }, [jwt,status]);
+        dispatch(getOrderHistory(status,page));
+        if(!jwt){
+navigate('/')
+        }
+    }, [jwt,status,page]);
     return (
         <Box className="px-10">
             <Grid container spacing={0} sx={{justifyContent: "space-between"}}>
@@ -55,10 +71,23 @@ const Order = () => {
                 </Grid>
                 <Grid item xs={9}>
                     <Box className="space-y-5 ">
-                        {order.orders?.content?.length > 0 && order.orders?.content?.map((order) => {
-                            return order?.orderItems?.map((item, index) => <OrderCard item={item} order={order}/>)
-                        })}
+                        {order.orders?.content?.length > 0 ? 
+                       order.orders?.content?.map((order) => {
+                        return order?.orderItems?.map((item, index) => <OrderCard item={item} order={order}/>)
+                    }) :
+                    <div>Không có đơn hàng nào</div>
+                    }
                     </Box>
+                    <section className="w-full px-[3.6rem]">
+                        <div className="mx-auto px-4 py-5 flex justify-center shadow-lg border rounded-md">
+                            <Pagination
+                            count={order.orders?.totalPages}
+                            color="primary"
+                            className=""
+                            onChange={handlePaginationChange}
+                            />
+                        </div>
+                    </section>
                 </Grid>
             </Grid>
         </Box>

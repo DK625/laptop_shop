@@ -3,6 +3,7 @@ import HomeLaptopCard from "./HomeLaptopCard";
 import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
+import './index.css'
 
 const HomeLaptopSection = ({ section, data }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,7 +19,7 @@ const HomeLaptopSection = ({ section, data }) => {
   };
 
   const items = data?.slice(0, 10).map((item) => (
-    <div key={item.id} className="">
+    <div key={item.id} className="h-full">
       <HomeLaptopCard laptop={item} />
     </div>
   ));
@@ -45,6 +46,7 @@ const HomeLaptopSection = ({ section, data }) => {
             onSlideChanged={syncActiveIndex}
             animationType="fadeout"
             animationDuration={2000}
+            className="h-full"
           />
           {canSlideNext && (
             <Button

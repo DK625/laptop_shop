@@ -16,7 +16,7 @@ const PieChart = () => {
       const res = await api.get(`/api/dashboard/product-revenue-percentages`);
       if (res.data) {
         setReportYearly(res.data.map((item) => item.percentage));
-        setLabels(res.data.map((item) => item.productName));
+        setLabels(res.data.map((item) => item.categoryName));
       }
     };
     getData();

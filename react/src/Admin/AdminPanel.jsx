@@ -34,9 +34,9 @@ const menu = [
     {name: "Laptops", path: "/admin/laptops"},
     {name: "Customers", path: "/admin/customers"},
     {name: "Orders", path: "/admin/orders"},
-    {name: "Total Earnings", path: "/admin"},
-    {name: "Weekly Overview", path: "/admin"},
-    {name: "Monthly Overview", path: "/admin"}
+    // {name: "Total Earnings", path: "/admin"},
+    // {name: "Weekly Overview", path: "/admin"},
+    // {name: "Monthly Overview", path: "/admin"}
 ];
 
 export default function AdminPanel() {
@@ -68,7 +68,7 @@ export default function AdminPanel() {
                 ))}
             </List>
 
-            <List sx={{position: "absolute", bottom: 0, width: "100%"}}>
+            {/* <List sx={{position: "absolute", bottom: 0, width: "100%"}}>
                 <Divider/>
                 {["Account", "Request"].map((text, index) => (
                     <ListItem key={text} disablePadding>
@@ -80,7 +80,7 @@ export default function AdminPanel() {
                         </ListItemButton>
                     </ListItem>
                 ))}
-            </List>
+            </List> */}
         </Box>
     );
 
@@ -133,8 +133,8 @@ export default function AdminPanel() {
                         <Route path="/laptop/create" element={<CreateLaptopForm/>}></Route>
                         {/*<Route path="/laptop/update/:laptopId" element={<UpdateLaptopForm/>}></Route>*/}
                         <Route path="/laptops" element={<LaptopsTable/>}></Route>
-                        {/*<Route path="/orders" element={<OrdersTable/>}></Route>*/}
-                        {/*<Route path="/customers" element={<Customers/>}></Route>*/}
+                        <Route path="/orders" element={<OrdersTable/>}></Route>
+                        <Route path="/customers" element={<Customers/>}></Route>
                         {/*<Route path="/demo" element={<DemoAdmin />}></Route>*/}
                     </Routes>
                 </Box>

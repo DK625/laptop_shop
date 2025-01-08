@@ -20,7 +20,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { findLaptops } from "../../../Redux/Admin/Laptop/Action";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, Slider } from "@mui/material";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -33,6 +33,8 @@ export default function Laptop() {
   const jwt = localStorage.getItem("jwt");
   const param = useParams();
   const { laptop } = useSelector((store) => store);
+  console.log('cls-linh-laptop',laptop);
+  
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
 
@@ -50,6 +52,10 @@ export default function Laptop() {
   const sortValue = searchParams.get("sort");
   const pageNumber = searchParams.get("page") || 1;
   const stock = searchParams.get("stock");
+  const [priceRange, setPriceRange] = useState([0,100000000]);
+  
+  // const [colors, setColors] = useState([]);
+  
 
   // console.log("location - ", colorValue, sizeValue,price,disccount);
 
@@ -70,18 +76,31 @@ export default function Laptop() {
     const [minPrice, maxPrice] = price === null ? [0, 0] : price.split("-").map(Number);
     const data = {
       category: param.lavelThree,
-      // colors: colorValue || [],
+      color: colorValue || [],
       // sizes: sizeValue || [],
-      minPrice: minPrice || 0,
-      maxPrice: maxPrice || 10000,
+      minPrice: minPrice || priceRange[0],
+      maxPrice: maxPrice || priceRange[1],
       minDiscount: disccount || 0,
       sortPrice: sortValue || "increase",
       pageNumber: pageNumber - 1,
       pageSize: 10,
       stock: stock,
     };
+    console.log('cls-linh-data',data);
+    
     dispatch(findLaptops(data));
   }, [param.lavelThree, colorValue, sizeValue, price, disccount, sortValue, pageNumber, stock]);
+
+  const handleChange = (event, newValue) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('price', `${newValue[0]}-${newValue[1]}`);
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+
+    setPriceRange(newValue);
+  };
+
+
 
   const handleFilter = (value, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
@@ -379,7 +398,7 @@ export default function Laptop() {
                             </Disclosure.Button>
                           </h3>
                           <Disclosure.Panel className="pt-6">
-                            <FormControl>
+                            {/* <FormControl>
                               <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 defaultValue="female"
@@ -391,18 +410,29 @@ export default function Laptop() {
                                   />
                                 ))}
                               </RadioGroup>
-                            </FormControl>
+                            </FormControl> */}
+                            <Slider
+                    value={priceRange}
+                    onChange={handleChange}
+                    step={100000}
+                    // valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value.toLocaleString()}`}
+                    min={0}
+                    max={100000000}
+                    valueLabelDisplay="auto"
+                  />
                           </Disclosure.Panel>
                         </>
                       )}
                     </Disclosure>
                   ))}
+                  
                 </form>
 
                 {/* Laptop grid */}
                 <div className="lg:col-span-4 w-full ">
-                  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
-                    {laptop?.laptops?.content?.map((item) => (
+                  <div className="grid grid-cols-5 gap-3 bg-white border py-5 rounded-md ">
+                    {laptop?.laptops.map((item) => (
                       <LaptopCard laptop={item} />
                     ))}
                   </div>

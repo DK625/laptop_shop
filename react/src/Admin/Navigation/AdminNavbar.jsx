@@ -180,7 +180,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
               sx={{ width: 32, height: 32, marginRight: 2 }} // Tùy chỉnh kích thước và khoảng cách
             />
           </Link>
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -188,7 +188,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">

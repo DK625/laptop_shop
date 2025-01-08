@@ -107,35 +107,42 @@ export const findLaptops = (reqData) => async (dispatch) => {
         sort,
         page,
         size,
+        color
     } = reqData;
 
     try {
         dispatch({ type: FIND_LAPTOPS_BY_FILTER_REQUEST });
+        console.log('cls-linh-req-colors', color);
+        
 
         // Xây dựng URL query string
         const queryParams = new URLSearchParams();
 
-        if (brands) queryParams.append("brands", brands.join(","));
-        if (category) queryParams.append("category", category);
-        if (gpuType) queryParams.append("gpuType", gpuType);
-        if (cpuTechnologies) queryParams.append("cpuTechnologies", cpuTechnologies.join(","));
-        if (ramCapacity) queryParams.append("ramCapacity", ramCapacity.join(","));
-        if (diskCapacity) queryParams.append("diskCapacity", diskCapacity.join(","));
-        if (screenSize) queryParams.append("screenSize", screenSize.join(","));
+        // if (brands) queryParams.append("brands", brands.join(","));
+        // if (category) queryParams.append("category", category);
+        // if (gpuType) queryParams.append("gpuType", gpuType);
+        // if (cpuTechnologies) queryParams.append("cpuTechnologies", cpuTechnologies.join(","));
+        // if (ramCapacity) queryParams.append("ramCapacity", ramCapacity.join(","));
+        // if (diskCapacity) queryParams.append("diskCapacity", diskCapacity.join(","));
+        // if (screenSize) queryParams.append("screenSize", screenSize.join(","));
         if (minPrice) queryParams.append("minPrice", minPrice);
         if (maxPrice) queryParams.append("maxPrice", maxPrice);
+        if (color) queryParams.append("colors", color);
+
         if (sort) queryParams.append("sort", sort);
         if (page !== undefined) queryParams.append("page", page);
         if (size !== undefined) queryParams.append("size", size);
 
+
+        console.log('cls-linh-req',queryParams);
+        
+
         // Gửi request GET với các query param đã xây dựng
-        const { data } = await api.get(`/laptops/filter?${queryParams.toString()}`);
-
-        console.log("get laptops by filters - ", data);
-
+        const res = await api.get(`/laptops/filter?${queryParams.toString()}`);
+        
         dispatch({
             type: FIND_LAPTOPS_BY_FILTER_SUCCESS,
-            payload: data,
+            payload: res.data.content,
         });
     } catch (error) {
         dispatch({
@@ -194,17 +201,19 @@ export const uploadFiles = (laptopId, formData) => async (dispatch) => {
     });
   }
 };
-export const updateLaptop = (laptop) => async (dispatch) => {
+export const updateLaptop = (options) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_LAPTOP_REQUEST });
     const { data } = await api.put(
-      `${API_BASE_URL}/laptops/api/admin/${laptop.laptopId}`,
-      laptop
+      `${API_BASE_URL}/laptops/api/admin/${options.id}`,
+      options
     );
     dispatch({
       type: UPDATE_LAPTOP_SUCCESS,
       payload: data,
     });
+    window.location.reload();
+    
   } catch (error) {
     dispatch({
       type: UPDATE_LAPTOP_FAILURE,
@@ -219,11 +228,12 @@ export const updateLaptop = (laptop) => async (dispatch) => {
 export const deleteLaptop = (data) => async (dispatch) => {
   console.log("Delete laptop with id:", data)
   try {
+    const jwt = localStorage.getItem("jwt");
     dispatch({ type: DELETE_LAPTOP_REQUEST });
-    await api.delete(`/laptops/api/admin/${data.laptopId}`);//có thể không cân id
+    await api.put(`/laptops/api/delete/${data}`, {jwt});
     dispatch({
       type: DELETE_LAPTOP_SUCCESS,
-      payload: data,
+      // payload: data,
     });
     console.log("Laptop deleted ", data);
   } catch (error) {
