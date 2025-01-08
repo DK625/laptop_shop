@@ -102,19 +102,21 @@ export const findLaptops = (reqData) => async (dispatch) => {
         ramCapacity,
         diskCapacity,
         screenSize,
+        cpuId,
         minPrice,
         maxPrice,
-        sort,
+        sortPrice,
+        minRamMemory,
+        maxRamMemory,
         page,
         size,
-        color
+        color,
+        gpuIds,
+        brandId
     } = reqData;
 
     try {
         dispatch({ type: FIND_LAPTOPS_BY_FILTER_REQUEST });
-        console.log('cls-linh-req-colors', color);
-        
-
         // Xây dựng URL query string
         const queryParams = new URLSearchParams();
 
@@ -122,14 +124,24 @@ export const findLaptops = (reqData) => async (dispatch) => {
         // if (category) queryParams.append("category", category);
         // if (gpuType) queryParams.append("gpuType", gpuType);
         // if (cpuTechnologies) queryParams.append("cpuTechnologies", cpuTechnologies.join(","));
+        if (gpuIds) queryParams.append("gpuIds", gpuIds.join(","));
+        if (diskCapacity) {
+          queryParams.append("minDiskCapacity", diskCapacity[0])
+          queryParams.append("maxDiskCapacity", diskCapacity[1])
+        };
         // if (ramCapacity) queryParams.append("ramCapacity", ramCapacity.join(","));
         // if (diskCapacity) queryParams.append("diskCapacity", diskCapacity.join(","));
         // if (screenSize) queryParams.append("screenSize", screenSize.join(","));
+
+        if (brandId) queryParams.append("brandId", brandId);
+        if (minRamMemory) queryParams.append("minRamMemory", minRamMemory);
+        if (cpuId) queryParams.append("cpuId", cpuId);
+        if (maxRamMemory) queryParams.append("maxRamMemory", maxRamMemory);
         if (minPrice) queryParams.append("minPrice", minPrice);
         if (maxPrice) queryParams.append("maxPrice", maxPrice);
         if (color) queryParams.append("colors", color);
 
-        if (sort) queryParams.append("sort", sort);
+        if (sortPrice) queryParams.append("sortPrice", sortPrice);
         if (page !== undefined) queryParams.append("page", page);
         if (size !== undefined) queryParams.append("size", size);
 

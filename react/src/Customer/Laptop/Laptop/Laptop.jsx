@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { findLaptops } from "../../../Redux/Admin/Laptop/Action";
 import { Backdrop, CircularProgress, Slider } from "@mui/material";
+import {  useBrand, useCpu, useDiskCapacity, useGpu } from "./hooks";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -51,6 +52,8 @@ export default function Laptop() {
   const disccount = searchParams.get("disccout");
   const sortValue = searchParams.get("sort");
   const pageNumber = searchParams.get("page") || 1;
+  const minRamMemory = parseInt(searchParams.get("minRamMemory")??1) ;
+  const maxRamMemory = parseInt(searchParams.get("maxRamMemory")??100) ;
   const stock = searchParams.get("stock");
   const [priceRange, setPriceRange] = useState([0,100000000]);
   
@@ -58,6 +61,11 @@ export default function Laptop() {
   
 
   // console.log("location - ", colorValue, sizeValue,price,disccount);
+  const {cpus, cpu}= useCpu(searchParams)
+  const {gpus, gpu}= useGpu(searchParams)
+  const {diskCapacity} = useDiskCapacity(searchParams)
+  const {brands, brand} = useBrand(searchParams)
+
 
   const handleSortChange = (value) => {
     const searchParams = new URLSearchParams(location.search);
@@ -71,6 +79,8 @@ export default function Laptop() {
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+  const [reload, setReload] = useState(true);
+  
 
   useEffect(() => {
     const [minPrice, maxPrice] = price === null ? [0, 0] : price.split("-").map(Number);
@@ -80,16 +90,22 @@ export default function Laptop() {
       // sizes: sizeValue || [],
       minPrice: minPrice || priceRange[0],
       maxPrice: maxPrice || priceRange[1],
+      minRamMemory,
+      maxRamMemory,
+      diskCapacity,
       minDiscount: disccount || 0,
       sortPrice: sortValue || "increase",
       pageNumber: pageNumber - 1,
       pageSize: 10,
+      gpuIds:[gpu],
+      brandId:brand,
+      cpuId:cpu,
       stock: stock,
     };
     console.log('cls-linh-data',data);
     
     dispatch(findLaptops(data));
-  }, [param.lavelThree, colorValue, sizeValue, price, disccount, sortValue, pageNumber, stock]);
+  }, [param.lavelThree, colorValue,brand,reload,diskCapacity, sizeValue,minRamMemory,gpu,maxRamMemory,cpu, price, disccount, sortValue, pageNumber, stock]);
 
   const handleChange = (event, newValue) => {
     const searchParams = new URLSearchParams(location.search);
@@ -128,6 +144,23 @@ export default function Laptop() {
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
+  const handleFilterChange = (v, sectionId) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set(sectionId, v);
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  };
+
+  const handleChangeRam = (e)=>{
+    const value = e.target.value
+    
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('minRamMemory', value[0]);
+    searchParams.set('maxRamMemory', value[1]);
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  }
 
   useEffect(() => {
     if (laptop.loading) {
@@ -412,8 +445,8 @@ export default function Laptop() {
                               </RadioGroup>
                             </FormControl> */}
                             <Slider
-                    value={priceRange}
-                    onChange={handleChange}
+                    defaultValue={priceRange}
+                    onChangeCommitted={handleChange}
                     step={100000}
                     // valueLabelDisplay="auto"
                     valueLabelFormat={(value) => `${value.toLocaleString()}`}
@@ -426,13 +459,211 @@ export default function Laptop() {
                       )}
                     </Disclosure>
                   ))}
-                  
+                  <Disclosure as="div" className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Ram
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true"/>
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true"/>
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            {/* <FormControl>
+                              <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
+                              >
+                                {section.options.map((option, optionIdx) => (
+                                  <FormControlLabel  value={option.value} control={<Radio />} label={option.label} 
+                                    onChange={(e) => handleRadioFilterChange(e, section.id)}
+                                  />
+                                ))}
+                              </RadioGroup>
+                            </FormControl> */}
+                            <Slider
+                              defaultValue={[minRamMemory,maxRamMemory]}
+                              onChangeCommitted={(e,value)=>{
+                                const searchParams = new URLSearchParams(location.search);
+                                searchParams.set('minRamMemory', value[0]);
+                                searchParams.set('maxRamMemory', value[1]);
+                                const query = searchParams.toString();
+                                navigate({ search: `?${query}` });
+                              }}
+                              step={2}
+                              valueLabelFormat={(value) => `${value.toLocaleString()}`}
+                              min={1}
+                              max={100}
+                              valueLabelDisplay="auto"
+                            />
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                    <Disclosure as="div" className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Cpu
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true"/>
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true"/>
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <FormControl>
+                              <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
+                              >
+                                {cpus.map((item, itemIdx) => (
+                                  <FormControlLabel  value={item.id} control={<Radio />} label={item.model} 
+                                    onChange={(e) => handleRadioFilterChange(e, 'cpuId')}
+                                  />
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                    <Disclosure as="div" className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Gpu
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true"/>
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true"/>
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <FormControl>
+                              <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
+                              >
+                                {gpus.map((item, itemIdx) => (
+                                  <FormControlLabel  value={item.id} control={<Radio />} label={item.model} 
+                                    onChange={(e) => handleRadioFilterChange(e, 'gpuIds')}
+                                  />
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                    <Disclosure as="div" className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Ổ đĩa
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true"/>
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true"/>
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <Slider
+                    defaultValue={diskCapacity}
+                    // onChange={(e)=>{console.log('cls-linh-filter',e.target.value);
+                    
+                    //   handleFilterChange(e.target.value[0], 'minDiskCapacity')
+                    //   handleFilterChange(e.target.value[1], 'maxDiskCapacity')
+                    // }}
+                    onChangeCommitted={(e, newValue) => {
+                      const searchParams = new URLSearchParams(location.search);
+                      searchParams.set('minDiskCapacity', newValue[0]);
+                      searchParams.set('maxDiskCapacity', newValue[1]);
+                      const query = searchParams.toString();
+                      navigate({ search: `?${query}` });
+                      setReload(prop=>!prop)
+                    }}
+                    step={50}
+                    // valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value.toLocaleString()}`}
+                    min={0}
+                    max={1000}
+                    valueLabelDisplay="auto"
+                  />
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                    <Disclosure as="div" className="border-b border-gray-200 py-6">
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Brand
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon className="h-5 w-5" aria-hidden="true"/>
+                                ) : (
+                                  <PlusIcon className="h-5 w-5" aria-hidden="true"/>
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <FormControl>
+                              <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
+                              >
+                                {brands.map((item, itemIdx) => (
+                                  <FormControlLabel  value={item.id} control={<Radio />} label={item.name} 
+                                    onChange={(e) => handleRadioFilterChange(e, 'brandId')}
+                                  />
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
                 </form>
 
                 {/* Laptop grid */}
                 <div className="lg:col-span-4 w-full ">
                   <div className="grid grid-cols-5 gap-3 bg-white border py-5 rounded-md ">
-                    {laptop?.laptops.map((item) => (
+                    {laptop?.laptops?.map((item) => (
                       <LaptopCard laptop={item} />
                     ))}
                   </div>

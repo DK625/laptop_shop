@@ -20,6 +20,44 @@ import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
 import { createLaptop, uploadFiles } from "../../../Redux/Admin/Laptop/Action";
 
+function validateObject(obj) {
+  const errors = [];
+
+  // Hàm kiểm tra giá trị null, rỗng hoặc không hợp lệ
+  const isInvalid = (value) => value === null || value === "";
+
+  // Lặp qua các trường trong object
+  for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+          if (obj[key].length === 0) {
+              errors.push(key);
+          } else {
+              // Kiểm tra nếu mảng là mảng của object (vd: laptopColors)
+              obj[key].forEach((item, index) => {
+                  if (typeof item === "object") {
+                      for (const subKey in item) {
+                          if (isInvalid(item[subKey])) {
+                              errors.push(`${key}[${index}].${subKey}`);
+                          }
+                      }
+                  }
+              });
+          }
+      } else if (typeof obj[key] === "object") {
+          // Kiểm tra object con
+          for (const subKey in obj[key]) {
+              if (isInvalid(obj[key][subKey])) {
+                  errors.push(`${key}.${subKey}`);
+              }
+          }
+      } else if (isInvalid(obj[key])) {
+          errors.push(key);
+      }
+  }
+
+  return errors.length > 0 ? `Các trường: ${errors.join(", ")} không được để trống` : "done";
+}
+
 const CreateLaptopForm = () => {
   const dispatch = useDispatch();
   const { laptop, loading, error } = useSelector((state) => state.laptop);
@@ -216,8 +254,12 @@ const CreateLaptopForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting form...");
-    console.log(laptopData);
+    console.log('cls-linh-form',laptopData);
+    const val = validateObject(laptopData)
+    if(val!=='done'){
+      alert(val);
+      return
+    }
     const res = await dispatch(createLaptop({ data: laptopData }));
     console.log("Result:", res);
     if (res) {
