@@ -42,29 +42,38 @@ public class OrderServiceImpl implements OrderService {
 		user.getAddresses().add(address);
 		userRepository.save(user);
 
-		//List<CartItemDTO> userCart = cartService.findUserCart(user.getId());
 		List<OrderItem> orderItems = new ArrayList<>();
-		float totalPrice=0;
-		float totalDiscountedPrice=0;
-		int totalItem=0;
-		for(CartItemDTO item: orderDTO.getCartItems()) {
+		float totalPrice = 0;
+		float totalDiscountedPrice = 0;
+		int totalItem = 0;
+
+		for (CartItemDTO item : orderDTO.getCartItems()) {
 			OrderItem orderItem = new OrderItem();
 			Laptop laptop = laptopRepository.findById(item.getLaptopId())
 					.orElseThrow(() -> new LaptopException("Laptop not found"));
 			orderItem.setLaptop(laptop);
 			orderItem.setColor(colorService.getColorById(item.getColorId()));
 			orderItem.setQuantity(item.getQuantity());
-			totalPrice += laptop.getPrice()*item.getQuantity();
-			totalDiscountedPrice += totalPrice*(100-laptop.getDiscountPercent())/100;
+
+			// Tính tổng giá trị trước chiết khấu
+			float itemTotalPrice = laptop.getPrice() * item.getQuantity();
+			totalPrice += itemTotalPrice;
+
+			// Tính giá trị chiết khấu cho sản phẩm
+			float itemDiscountedPrice = itemTotalPrice * (100 - laptop.getDiscountPercent()) / 100;
+			totalDiscountedPrice += itemDiscountedPrice;
+
 			totalItem += item.getQuantity();
+
 			cartItemService.removeCartItem(user.getId(), item.getId());
 			OrderItem createdOrderItem = orderItemRepository.save(orderItem);
 			orderItems.add(createdOrderItem);
+
 			Color color = orderItem.getColor();
 			Set<LaptopColor> laptopColors = laptop.getLaptopColors();
 			for (LaptopColor laptopColor : laptopColors) {
-				if(laptopColor.getColor().equals(color)) {
-					laptopColor.setQuantity((short) (laptopColor.getQuantity()-orderItem.getQuantity()));
+				if (laptopColor.getColor().equals(color)) {
+					laptopColor.setQuantity((short) (laptopColor.getQuantity() - orderItem.getQuantity()));
 				}
 			}
 			laptopRepository.save(laptop);
@@ -83,13 +92,14 @@ public class OrderServiceImpl implements OrderService {
 		createdOrder.setOrderStatus(Order.OrderStatus.PENDING);
 		Order savedOrder = orderRepository.save(createdOrder);
 
-		for(OrderItem item : orderItems) {
+		for (OrderItem item : orderItems) {
 			item.setOrder(savedOrder);
 			orderItemRepository.save(item);
 		}
 
 		return savedOrder;
 	}
+
 
 	@Override
 	public Order findOrderById(Long orderId) throws OrderException {
