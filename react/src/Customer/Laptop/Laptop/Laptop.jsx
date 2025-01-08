@@ -34,7 +34,7 @@ export default function Laptop() {
   const jwt = localStorage.getItem("jwt");
   const param = useParams();
   const { laptop } = useSelector((store) => store);
-  console.log('cls-linh-laptop',laptop);
+  console.log('laptop',laptop);
   
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
@@ -204,9 +204,7 @@ export default function Laptop() {
               >
                 <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
                   <div className="flex items-center justify-between px-4">
-                    {/* <h2 className="text-lg font-medium text-gray-900">
-                      Filters
-                    </h2> */}
+                    
                     <button
                       type="button"
                       className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
@@ -290,7 +288,7 @@ export default function Laptop() {
 
         <main className="mx-auto px-4 lg:px-14 ">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
               Bộ lọc tìm kiếm
             </h1>
 
@@ -298,7 +296,7 @@ export default function Laptop() {
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
+                    Sắp xếp
                     <ChevronDownIcon
                       className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
@@ -352,7 +350,7 @@ export default function Laptop() {
                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                 onClick={() => setMobileFiltersOpen(true)}
               >
-                <span className="sr-only">Filters</span>
+                <span className="sr-only">Bộ lọc</span>
                 <FunnelIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
@@ -431,19 +429,6 @@ export default function Laptop() {
                             </Disclosure.Button>
                           </h3>
                           <Disclosure.Panel className="pt-6">
-                            {/* <FormControl>
-                              <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="female"
-                                name="radio-buttons-group"
-                              >
-                                {section.options.map((option, optionIdx) => (
-                                  <FormControlLabel  value={option.value} control={<Radio />} label={option.label} 
-                                    onChange={(e) => handleRadioFilterChange(e, section.id)}
-                                  />
-                                ))}
-                              </RadioGroup>
-                            </FormControl> */}
                             <Slider
                     defaultValue={priceRange}
                     onChangeCommitted={handleChange}

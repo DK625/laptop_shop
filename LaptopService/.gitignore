@@ -5,3 +5,7 @@ app/static/image_embeddings.db
 app/static/embedding_model.h5
 #app/static/laptop_img
 .idea
+app/__pycache__
+app/routes/__pycache__
+app/services/__pycache__
+.env

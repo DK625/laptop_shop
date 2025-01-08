@@ -31,7 +31,7 @@ const HomeLaptopSection = ({ section, data }) => {
 
   return (
     <div className="relative px-4 sm:px-6 lg:px-8">
-      <h2 className="text-2xl font-extrabold text-gray-900 py-5">{section}</h2>
+      <h2 className="text-2xl font-bold text-gray-900 py-5">{section}</h2>
       {!hasData ? (
         <p className="text-center text-gray-500 py-10">Chưa có dữ liệu</p>
       ) : (

@@ -354,12 +354,12 @@ export default function Navigation() {
                                                 }}
                                             >{auth.user?.role === "ADMIN"&&
                                                 <MenuItem onClick={handleAdminClick}>
-                                                    Admin Dashboard
+                                                    Trang quản trị
                                                 </MenuItem>}
                                                 <MenuItem onClick={handleMyOrderClick}>
-                                                    My Orders
+                                                    Quản lý đơn hàng
                                                 </MenuItem>
-                                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                                <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                                             </Menu>
                                         </div>
                                     ) : (
