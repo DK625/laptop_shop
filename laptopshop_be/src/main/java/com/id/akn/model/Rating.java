@@ -33,7 +33,7 @@ public class Rating {
 	private Laptop laptop;
 	
 	@Column(name = "rating")
-	private float rating;
+	private Integer rating;
 	
 	private LocalDateTime createdAt;
 	

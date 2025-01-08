@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 public class RatingDTO {
 	private Integer laptopId;
-	private float rating;
+	private Integer rating;
 	private Long orderId;
 }
