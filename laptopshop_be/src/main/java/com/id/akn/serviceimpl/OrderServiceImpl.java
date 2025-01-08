@@ -97,10 +97,10 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Page<Order> userOrdersHistory(Long userId, Order.PaymentStatus paymentStatus, int page, int size)  {
+	public Page<Order> userOrdersHistory(Long userId, Order.OrderStatus  paymentStatus, int page, int size)  {
 		Pageable pageable = PageRequest.of(page - 1, size);
 		if (paymentStatus != null) {
-			return orderRepository.findByPaymentStatusAndUserId(paymentStatus, userId, pageable);
+			return orderRepository.findByOrderStatusAndUserIdOrderByCreatedAtDesc(paymentStatus, userId, pageable);
 		} else {
 			return orderRepository.findByUserId(userId, pageable);
 		}
