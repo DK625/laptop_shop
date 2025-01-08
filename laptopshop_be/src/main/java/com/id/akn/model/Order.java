@@ -55,18 +55,12 @@ public class Order {
 
 	public enum OrderStatus {
 		PENDING,
-		PLACED,
 		CONFIRMED,
 		SHIPPED,
 		DELIVERED,
 		CANCELLED
 	}
 	public enum PaymentMethod {
-		VISA,
-		NCB,
-		MasterCard,
-		JCB,
-		EXIMBANK,
 		COD,
 		QR
 	}

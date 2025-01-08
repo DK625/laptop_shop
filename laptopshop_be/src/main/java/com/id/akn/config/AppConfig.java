@@ -37,7 +37,6 @@ public class AppConfig {
 							"http://14.225.29.152:3000",
 							"http://14.225.29.152"
 					));
-//					cfg.setAllowedOrigins(Arrays.asList("*"));
 					cfg.setAllowedMethods(Collections.singletonList("*"));
 					cfg.setAllowCredentials(true);
 					cfg.setAllowedHeaders(Collections.singletonList("*"));

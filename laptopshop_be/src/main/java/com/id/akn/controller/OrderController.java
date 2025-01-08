@@ -25,11 +25,9 @@ public class OrderController {
 	private OrderService orderService;
 	private UserService userService;
 
-
 	@PostMapping("/")
 	public ResponseEntity<Order> createOrderHandler(@RequestBody OrderDTO orderDTO,
 													@RequestHeader("Authorization") String jwt) throws UserException, CartItemException, ColorException, LaptopException {
-
 		User user = userService.findUserProfileByJwt(jwt);
 		Order order = orderService.createOrder(user, orderDTO);
 		return new ResponseEntity<>(order, HttpStatus.OK);
