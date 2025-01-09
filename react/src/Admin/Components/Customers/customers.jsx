@@ -25,7 +25,7 @@ const Customers = () => {
     return (
         <Card>
             <CardHeader
-                title='New Customers'
+                title='Danh sách khách hàng'
                 sx={{pt: 2, alignItems: 'center', '& .MuiCardHeader-action': {mt: 0.6}}}
                 action={<Typography onClick={() => navigate("/admin/customers")} variant='caption'
                                     sx={{color: "blue", cursor: "pointer", paddingRight: ".8rem"}}>View
@@ -39,8 +39,8 @@ const Customers = () => {
                 <Table sx={{minWidth: 390}} aria-label='table in dashboard'>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Image</TableCell>
-                            <TableCell>Name</TableCell>
+                            <TableCell></TableCell>
+                            <TableCell>Tên</TableCell>
                             <TableCell>Email</TableCell>
 
                         </TableRow>

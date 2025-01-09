@@ -245,7 +245,7 @@ const UpdateLaptopForm = (props) => {
     },
   ];
 
-  console.log('cls-linh-status', laptopData);
+  console.log('status', laptopData);
 
 
   const handleFileChange = (e) => {

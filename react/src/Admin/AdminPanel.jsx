@@ -29,14 +29,11 @@ import UpdateLaptopForm from "./Components/UpdateLaptop/UpdateLaptop";
 const drawerWidth = 240;
 
 const menu = [
-    {name: "Dashboard", path: "/admin"},
-    {name: "Add Laptop", path: "/admin/laptop/create"},
-    {name: "Laptops", path: "/admin/laptops"},
-    {name: "Customers", path: "/admin/customers"},
-    {name: "Orders", path: "/admin/orders"},
-    // {name: "Total Earnings", path: "/admin"},
-    // {name: "Weekly Overview", path: "/admin"},
-    // {name: "Monthly Overview", path: "/admin"}
+    {name: "Tổng quan", path: "/admin"},
+    {name: "Thêm sản phẩm", path: "/admin/laptop/create"},
+    {name: "Danh sách sản phẩm", path: "/admin/laptops"},
+    {name: "Danh sách khách hàng", path: "/admin/customers"},
+    {name: "Quản lý đơn hàng", path: "/admin/orders"},
 ];
 
 export default function AdminPanel() {
@@ -67,20 +64,6 @@ export default function AdminPanel() {
                     </ListItem>
                 ))}
             </List>
-
-            {/* <List sx={{position: "absolute", bottom: 0, width: "100%"}}>
-                <Divider/>
-                {["Account", "Request"].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-                            </ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List> */}
         </Box>
     );
 
@@ -99,7 +82,6 @@ export default function AdminPanel() {
             <Box sx={{display: `${isLargeScreen ? "flex" : "block"}`}}>
                 <CssBaseline/>
                 <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile}/>
-
                 <Drawer
                     variant={drawerVariant}
                     sx={{
@@ -135,7 +117,6 @@ export default function AdminPanel() {
                         <Route path="/laptops" element={<LaptopsTable/>}></Route>
                         <Route path="/orders" element={<OrdersTable/>}></Route>
                         <Route path="/customers" element={<Customers/>}></Route>
-                        {/*<Route path="/demo" element={<DemoAdmin />}></Route>*/}
                     </Routes>
                 </Box>
             </Box>

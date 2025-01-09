@@ -34,9 +34,9 @@ export default function SearchImage({ setValue }) {
           setValue(res.data);
         }
 
-        console.log("cls-linh-image", res.data);
+        console.log("image", res.data);
       } catch (error) {
-        console.error("cls-linh-image", error);
+        console.error("image", error);
       }
     }
   };

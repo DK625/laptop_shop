@@ -21,6 +21,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { createLaptop, uploadFiles } from "../../../Redux/Admin/Laptop/Action";
 
 const CreateLaptopForm = () => {
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+
+  const validateForm = () => {
+    if (!laptopData.brandId || !laptopData.model || !laptopData.cpu || laptopData.gpus.length === 0) {
+      setErrorMessage("Vui lòng điền đầy đủ các trường bắt buộc: Thương hiệu, Model, CPU, và GPU.");
+      return false;
+    }
+    setErrorMessage(""); // Clear error message if validation passes
+    return true;
+  };
   const dispatch = useDispatch();
   const { laptop, loading, error } = useSelector((state) => state.laptop);
   const [laptopData, setLaptopData] = useState({
@@ -160,40 +170,11 @@ const CreateLaptopForm = () => {
     }));
   };
 
-  // const isGpuTypeSelected = (type) =>
-  //   laptopData.gpus.some((gpu) => {
-  //     const selectedGpu = gpus.find((g) => g.id === gpu.id);
-  //     return selectedGpu?.type === type;
-  //   });
-
-  // const isGpuTypeSelected = (type, currentGpuId) =>
-  //   laptopData.gpus.some((gpuId) => {
-  //     const gpu = gpus.find((g) => g.id === gpuId);
-  //     return gpu && gpu.type === type && gpu.id !== currentGpuId;
-  //   });
   const isGpuTypeSelected = (type, currentGpuId) =>
     laptopData.gpus.some((gpu) => {
       const selectedGpu = gpus.find((g) => g.id === gpu.id); // Tìm GPU trong danh sách `gpus` gốc
       return selectedGpu?.type === type && gpu.id !== currentGpuId; // So sánh loại và loại bỏ GPU hiện tại
     });
-
-  // const isGpuDisabled = (gpuType, gpuId) => {
-  //   const selectedGpuTypes = laptopData.gpus.map((gpu) => {
-  //     const selectedGpu = gpus.find((g) => g.id === gpu.id);
-  //     return selectedGpu?.type;
-  //   });
-
-  //   if (selectedGpuTypes.includes("INTEGRATED") && gpuType === "INTEGRATED" && !laptopData.gpus.some((gpu) => gpu.id === gpuId)) {
-  //     return true;
-  //   }
-
-  //   if (selectedGpuTypes.includes("DISCRETE") && gpuType === "DISCRETE" && !laptopData.gpus.some((gpu) => gpu.id === gpuId)) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // };
-
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -216,35 +197,40 @@ const CreateLaptopForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting form...");
-    console.log(laptopData);
-    const res = await dispatch(createLaptop({ data: laptopData }));
-    console.log("Result:", res);
-    if (res) {
-      console.log(res.id);
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
-      const fullData = await dispatch(uploadFiles(res.id, formData));
-      alert("Laptop created successfully", fullData);
-    }
-    else{
-      alert("Model đã tồn tại vui lòng chọn tên khác");
+    if (validateForm) {
+      console.log("Submitting form...");
+      console.log(laptopData);
+      const isValid = validateForm(); // Validate form before submission
+      if (!isValid) return; // Stop submission if validation fails
+
+      const res = await dispatch(createLaptop({ data: laptopData }));
+      console.log("Result:", res);
+      if (res && res.id) { // Check if response is valid and contains an id
+        const formData = new FormData();
+        files.forEach((file) => {
+          formData.append("files", file);
+        });
+        const fullData = await dispatch(uploadFiles(res.id, formData));
+        alert("Laptop đã được thêm mới", fullData);
+      } else {
+        alert("Model đã tồn tại vui lòng chọn tên khác");
+      }
+    } else{
+      alert(errorMessage);
     }
   };
 
   return (
     <Fragment>
       <Typography variant="h3" sx={{ textAlign: "center", marginBottom: 3 }}>
-        Add New Laptop
+        Thêm laptop
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={2}>
           {/*Brand*/}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Brand</InputLabel>
+              <InputLabel>Thương hiệu</InputLabel>
               <Select
                 name="brandId" // Đảm bảo tên trường khớp với state
                 value={laptopData.brandId} // Đảm bảo giá trị được lấy từ laptopData.brandId
@@ -302,28 +288,6 @@ const CreateLaptopForm = () => {
             </FormControl>
           </Grid>
 
-          {/* GPU */}
-          {/* <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>GPUs</InputLabel>
-              <Select multiple value={laptopData.gpus.map((gpu) => gpu.id)} onChange={handleGpuChange}
-                renderValue={(selected) => selected.map((id) => gpus.find((gpu) => gpu.id === id)?.model || "Unknown GPU").join(", ")}
-                label="GPUs" MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }} >
-                {gpus.map((gpu) => (
-                  <MenuItem
-                    key={gpu.id}
-                    value={gpu.id}
-                    disabled={!laptopData.gpus.includes(gpu.id) && isGpuTypeSelected(gpu.type)}
-                  >
-                    <Checkbox checked={laptopData.gpus.some((selectedGpu) => selectedGpu.id === gpu.id)} />
-                    <ListItemText primary={`${gpu.model} (${gpu.type})`} />
-                  </MenuItem>
-
-                ))}
-              </Select>
-            </FormControl>
-          </Grid> */}
-
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel>GPUs</InputLabel>
@@ -343,63 +307,36 @@ const CreateLaptopForm = () => {
             </FormControl>
           </Grid>
 
-          {/* <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>GPUs</InputLabel>
-              <Select
-                multiple
-                value={laptopData.gpus.map((gpu) => gpu.id)}
-                onChange={handleGpuChange}
-                renderValue={(selected) =>
-                  selected.map((id) => gpus.find((gpu) => gpu.id === id)?.model || "Unknown GPU").join(", ")
-                }
-                label="GPUs"
-                MenuProps={{ PaperProps: { style: { maxHeight: "50vh" } } }}
-              >
-                {gpus.map((gpu) => (
-                  <MenuItem
-                    key={gpu.id}
-                    value={gpu.id}
-                    disabled={isGpuDisabled(gpu.type, gpu.id)}
-                  >
-                    <Checkbox checked={laptopData.gpus.some((selectedGpu) => selectedGpu.id === gpu.id)} />
-                    <ListItemText primary={`${gpu.model} (${gpu.type})`} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid> */}
-
           {/*RAM*/}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="RAM Memory" name="ramMemory" value={laptopData.ramMemory} onChange={handleChange} type="number" />
+            <TextField fullWidth label="Kích thước bộ nhớ RAM" name="ramMemory" value={laptopData.ramMemory} onChange={handleChange} type="number" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="RAM Detail" name="ramDetail" value={laptopData.ramDetail} onChange={handleChange} />
+            <TextField fullWidth label="Thông tin chi tiết RAM" name="ramDetail" value={laptopData.ramDetail} onChange={handleChange} />
           </Grid>
 
           {/*Disk*/}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Disk Capacity (GB)" name="diskCapacity" value={laptopData.diskCapacity} onChange={handleChange} type="number" />
+            <TextField fullWidth label="Dung lượng ổ cứng (GB)" name="diskCapacity" value={laptopData.diskCapacity} onChange={handleChange} type="number" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Disk Detail" name="diskDetail" value={laptopData.diskDetail} onChange={handleChange} />
+            <TextField fullWidth label="Thông tin chi tiết ổ cứng" name="diskDetail" value={laptopData.diskDetail} onChange={handleChange} />
           </Grid>
 
           {/* Screen */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Screen Size (inch)" name="screenSize" value={laptopData.screenSize} onChange={handleChange} type="number"
+            <TextField fullWidth label="Kích thước màn hình (inch)" name="screenSize" value={laptopData.screenSize} onChange={handleChange} type="number"
               inputProps={{ step: "0.1", min: 0 }} />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Screen Detail" name="screenDetail" value={laptopData.screenDetail} onChange={handleChange} />
+            <TextField fullWidth label="Thông tin chi tiết màn hình" name="screenDetail" value={laptopData.screenDetail} onChange={handleChange} />
           </Grid>
 
           {/* OS Version */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>OS Version</InputLabel>
+              <InputLabel>Hệ điều hành</InputLabel>
               <Select
                 name="osVersionId" // Tên trường khớp với state
                 value={laptopData.osVersionId || ""} // Lấy giá trị từ laptopData.osVersionId
@@ -421,27 +358,27 @@ const CreateLaptopForm = () => {
 
           {/* Keyboard Type */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Keyboard Type" name="keyboardType" value={laptopData.keyboardType} onChange={handleChange} />
+            <TextField fullWidth label="Kiểu bàn phím" name="keyboardType" value={laptopData.keyboardType} onChange={handleChange} />
           </Grid>
 
           {/* Battery Charger */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Battery Charger" name="batteryCharger" value={laptopData.batteryCharger} onChange={handleChange} />
+            <TextField fullWidth label="Thông tin pin và sạc" name="batteryCharger" value={laptopData.batteryCharger} onChange={handleChange} />
           </Grid>
 
           {/* Design */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Design" name="design" value={laptopData.design} onChange={handleChange} />
+            <TextField fullWidth label="Thiết kế" name="design" value={laptopData.design} onChange={handleChange} />
           </Grid>
 
           {/*Laptop - Color - Quantity*/}
           <Grid item xs={12}>
-            <Typography variant="h6">Laptop Colors</Typography>
+            <Typography variant="h6">Màu và số lượng</Typography>
             {laptopData.laptopColors.map((laptopColor, index) => (
               <Grid container spacing={2} alignItems="center" key={index} sx={{ marginTop: index > 0 ? 2 : 0 }}>
                 <Grid item xs={5}>
                   <FormControl fullWidth>
-                    <InputLabel>Color</InputLabel>
+                    <InputLabel>Màu</InputLabel>
                     <Select value={laptopColor.colorId} label="Color"
                       onChange={(e) => handleLaptopColorChange(index, "colorId", e.target.value)}
                       renderValue={(selected) => colors.find((color) => color.id === selected)?.name || ""}
@@ -454,7 +391,7 @@ const CreateLaptopForm = () => {
                 </Grid>
 
                 <Grid item xs={5}>
-                  <TextField fullWidth label="Quantity" type="number" value={laptopColor.quantity}
+                  <TextField fullWidth label="Số lượng" type="number" value={laptopColor.quantity}
                     onChange={(e) => handleLaptopColorChange(index, "quantity", e.target.value)}
                   />
                 </Grid>
@@ -475,7 +412,7 @@ const CreateLaptopForm = () => {
           {/*Category*/}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Categories</InputLabel>
+              <InputLabel>Hạng mục</InputLabel>
               <Select
                 multiple
                 name="categories"
@@ -507,22 +444,22 @@ const CreateLaptopForm = () => {
 
           {/* Origin */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Origin" name="origin" value={laptopData.origin} onChange={handleChange} />
+            <TextField fullWidth label="Xuất xứ" name="origin" value={laptopData.origin} onChange={handleChange} />
           </Grid>
 
           {/* Warranty*/}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Warranty (months)" name="warranty" value={laptopData.warranty} onChange={handleChange} type="number" />
+            <TextField fullWidth label="Bảo hành (theo tháng)" name="warranty" value={laptopData.warranty} onChange={handleChange} type="number" />
           </Grid>
 
           {/* Price */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Price" name="price" value={laptopData.price} onChange={handleChange} type="number" />
+            <TextField fullWidth label="Giá" name="price" value={laptopData.price} onChange={handleChange} type="number" />
           </Grid>
 
           {/* Discount Percentage */}
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label="Discount Percentage" name="discountPercent" value={laptopData.discountPercent} onChange={handleChange} type="number"
+            <TextField fullWidth label="Phần trăm giảm giá" name="discountPercent" value={laptopData.discountPercent} onChange={handleChange} type="number"
               inputProps={{ step: "0.1", min: 0, max: 100 }} />
           </Grid>
 
@@ -541,11 +478,11 @@ const CreateLaptopForm = () => {
               }}
             >
               <Button variant="outlined" component="label" style={{ marginRight: "10px" }}>
-                Choose Files
+                Chọn tệp tin
                 <input type="file" hidden multiple onChange={handleFileChange} />
               </Button>
               <Typography>
-                {files.length > 0 ? `${files.length} files selected` : "No files selected"}
+                {files.length > 0 ? `${files.length} tệp tin đã chọn` : "Không tệp tin nào được chọn"}
               </Typography>
             </Box>
           </Grid>
@@ -573,7 +510,7 @@ const CreateLaptopForm = () => {
 
           <Grid item xs={12}>
             <Button variant="contained" color="primary" size="large" fullWidth type="submit" disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "Đang thêm..." : "Thêm"}
             </Button>
           </Grid>
         </Grid>

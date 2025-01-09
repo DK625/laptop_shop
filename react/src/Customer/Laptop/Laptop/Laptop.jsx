@@ -86,7 +86,7 @@ export default function Laptop() {
       pageSize: 10,
       stock: stock,
     };
-    console.log('cls-linh-data',data);
+    console.log('data',data);
     
     dispatch(findLaptops(data));
   }, [param.lavelThree, colorValue, sizeValue, price, disccount, sortValue, pageNumber, stock]);

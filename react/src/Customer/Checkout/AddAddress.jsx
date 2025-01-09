@@ -177,7 +177,7 @@ export default function AddDeliveryAddressForm({ handleNext }) {
                   onChange={(e) => setForm({ ...form, streetAddress: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} >
                 <TextField
                   required
                   id="city"

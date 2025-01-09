@@ -112,7 +112,7 @@ export const findLaptops = (reqData) => async (dispatch) => {
 
     try {
         dispatch({ type: FIND_LAPTOPS_BY_FILTER_REQUEST });
-        console.log('cls-linh-req-colors', color);
+        console.log('req-colors', color);
         
 
         // Xây dựng URL query string
@@ -134,7 +134,7 @@ export const findLaptops = (reqData) => async (dispatch) => {
         if (size !== undefined) queryParams.append("size", size);
 
 
-        console.log('cls-linh-req',queryParams);
+        console.log('req',queryParams);
         
 
         // Gửi request GET với các query param đã xây dựng
