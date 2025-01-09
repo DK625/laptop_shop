@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { findLaptopById } from "../../../Redux/Admin/Laptop/Action";
 import { addItemToCart, getCart } from "../../../Redux/Customers/Cart/Action";
 import { getAllReviews } from "../../../Redux/Customers/Review/Action";
-import { gounsPage1 } from "../../../Data/Gouns/gouns";
 import api, { API_BASE_URL } from "../../../Config/api";
 import axios from "axios";
 
@@ -78,7 +77,7 @@ export default function LaptopDetails() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(jwt!=null){
+    if (jwt != null) {
       try {
         const data = {
           laptopId: Number(laptopId),
@@ -97,7 +96,7 @@ export default function LaptopDetails() {
         setOpenAlert(true);
       }
     }
-    else{
+    else {
       setAlertSeverity("error");
       setAlertMessage("Bạn phải đăng nhập mới thực hiện được tính năng này");
       setOpenAlert(true);
@@ -111,10 +110,10 @@ export default function LaptopDetails() {
 
   const handleSubmitReview = async () => {
     if (newReview.des.trim() === "") {
-        setAlertSeverity("error");
-        setAlertMessage("Bình luận không được để trống.");
-        setOpenAlert(true);
-        return;
+      setAlertSeverity("error");
+      setAlertMessage("Bình luận không được để trống.");
+      setOpenAlert(true);
+      return;
     } else if (jwt) {
       try {
         const res = await api.post("/api/reviews/create", {
@@ -161,8 +160,8 @@ export default function LaptopDetails() {
           {alertMessage}
         </Alert>
       </Snackbar>
-      <div className="pt-6">
-        <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 pt-10">
+      <div className="pt-1">
+        <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 pt-6">
           <div className="flex flex-col items-center ">
             <div className="rounded-lg border border-gray-300 w-full h-[35rem] flex justify-center items-center">
               <img
@@ -196,10 +195,10 @@ export default function LaptopDetails() {
               <div className="flex space-x-5 items-center text-lg lg:text-xl tracking-tight text-gray-900 mt-6">
                 <p className="opacity-50 line-through">{laptop?.price.toLocaleString('vi-VN')} VND</p>
                 <p className="text-green-600 font-semibold">
-                  -{laptop?.discountPercent.toLocaleString('vi-VN')}%
+                  -{laptop?.discountPercent}%
                 </p>
                 <p className="font-semibold">
-                  {(laptop?.price * (100 - laptop?.discountPercent)) / 100} VND
+                  {((laptop?.price * (100 - laptop?.discountPercent)) / 100).toLocaleString('vi-VN')} VND
                 </p>
               </div>
               {/* Categories as Hashtags */}
@@ -314,7 +313,7 @@ export default function LaptopDetails() {
               {/* CPU Details */}
               {laptop?.cpu && (
                 <div className="p-2">
-                  <h4 className="text-sm font-bold text-black">CPU</h4>
+                  <h4 className="text-sm font-bold text-black">• CPU</h4>
                   <p className="text-gray-900">
                     {[
                       laptop.cpu.brandName,
@@ -344,7 +343,7 @@ export default function LaptopDetails() {
               {/* GPU Details */}
               {laptop?.gpus?.length > 0 && (
                 <div className="p-2">
-                  <h4 className="text-sm font-bold text-black">GPU</h4>
+                  <h4 className="text-sm font-bold text-black">• GPU</h4>
                   {laptop.gpus.map((gpu, index) => {
                     if (
                       gpu.brandName === "Unknown" ||
@@ -384,7 +383,7 @@ export default function LaptopDetails() {
               {/* RAM Details */}
               {laptop?.ramMemory && (
                 <div className="p-2">
-                  <h4 className="text-sm font-bold text-black">RAM</h4>
+                  <h4 className="text-sm font-bold text-black">• RAM</h4>
                   <p className="text-gray-900">{`${laptop.ramMemory} GB${laptop.ramDetail ? ` ${laptop.ramDetail}` : ""
                     }`}</p>
                 </div>
@@ -393,9 +392,9 @@ export default function LaptopDetails() {
               {laptop?.diskCapacity && (
                 <div className="p-2">
                   <h4 className="text-sm font-bold text-black">
-                    Ổ cứng
+                    • Ổ cứng
                   </h4>
-                  <p className="text-gray-900">{`${laptop.diskCapacity} GB${laptop.diskDetail ? ` - ${laptop.diskDetail}` : ""
+                  <p className="text-gray-900">{`${laptop.diskCapacity} GB${laptop.diskDetail ? ` ${laptop.diskDetail}` : ""
                     }`}</p>
                 </div>
               )}
@@ -403,9 +402,9 @@ export default function LaptopDetails() {
               {laptop?.screenSize && (
                 <div className="p-2">
                   <h4 className="text-sm font-bold text-black">
-                    Màn hình
+                    • Màn hình
                   </h4>
-                  <p className="text-gray-900">{`${laptop.screenSize} inch${laptop.screenDetail ? ` - ${laptop.screenDetail}` : ""
+                  <p className="text-gray-900">{`${laptop.screenSize} inch${laptop.screenDetail ? ` ${laptop.screenDetail}` : ""
                     }`}</p>
                 </div>
               )}
@@ -413,7 +412,7 @@ export default function LaptopDetails() {
               {laptop?.osVersion && (
                 <div className="p-2">
                   <h4 className="text-sm font-bold text-black">
-                    Hệ điều hành
+                    • Hệ điều hành
                   </h4>
                   <p className="text-gray-900">{laptop.osVersion}</p>
                 </div>
@@ -423,7 +422,7 @@ export default function LaptopDetails() {
                 laptop?.batteryCharger !== "Unknown" && (
                   <div className="p-2">
                     <h4 className="text-sm font-bold text-black">
-                      Thông tin pin & sạc
+                      • Thông tin pin & sạc
                     </h4>
                     <p className="text-gray-900">{laptop.batteryCharger}</p>
                   </div>
@@ -432,12 +431,12 @@ export default function LaptopDetails() {
               {laptop?.design && (
                 <div className="p-2">
                   <h4 className="text-sm font-bold text-black">
-                    Thiết kế
+                    • Thiết kế
                   </h4>
                   <p className="text-gray-900">{laptop.design}</p>
                 </div>
               )}
-              
+
             </div>
           </div>
         </section>

@@ -102,7 +102,7 @@ export default function Laptop() {
       cpuId:cpu,
       stock: stock,
     };
-    console.log('cls-linh-data',data);
+    console.log('data',data);
     
     dispatch(findLaptops(data));
   }, [param.lavelThree, colorValue,brand,reload,diskCapacity, sizeValue,minRamMemory,gpu,maxRamMemory,cpu, price, disccount, sortValue, pageNumber, stock]);
