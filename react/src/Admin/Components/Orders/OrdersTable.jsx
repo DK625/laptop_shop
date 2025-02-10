@@ -81,7 +81,7 @@ const OrdersTable = () => {
         <Box>
             <Card className="mt-2">
                 <CardHeader
-                    title="All Orders"
+                    title="Danh sách đơn hàng"
                     sx={{
                         pt: 2,
                         alignItems: "center",
@@ -92,13 +92,13 @@ const OrdersTable = () => {
                     <Table sx={{minWidth: 800}} aria-label="table in dashboard">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Image</TableCell>
-                                <TableCell>Title</TableCell>
-                                <TableCell>Price</TableCell>
+                                <TableCell></TableCell>
+                                <TableCell>Sản phẩm</TableCell>
+                                <TableCell>Giá trị đơn hàng</TableCell>
                                 <TableCell>Id</TableCell>
-                                <TableCell sx={{textAlign: "center"}}>Status</TableCell>
-                                <TableCell sx={{textAlign: "center"}}>Update</TableCell>
-                                <TableCell sx={{textAlign: "center"}}>Delete</TableCell>
+                                <TableCell sx={{textAlign: "center"}}>Trạng thái</TableCell>
+                                <TableCell sx={{textAlign: "center"}}>Cập nhật</TableCell>
+                                <TableCell sx={{textAlign: "center"}}>Xóa</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -172,7 +172,7 @@ const OrdersTable = () => {
                                                     handleUpdateStatusMenuClick(event, index)
                                                 }
                                             >
-                                                Status
+                                                Trạng thái
                                             </Button>
                                             <Menu
                                                 id={`basic-menu-${item.id}`}
@@ -187,16 +187,16 @@ const OrdersTable = () => {
                                                     onClick={() => handleConfirmedOrder(item.id, index)}
                                                     disabled={item.orderStatus === "DELEVERED" || item.orderStatus === "SHIPPED" || item.orderStatus === "CONFIRMED"}
                                                 >
-                                                    CONFIRMED ORDER
+                                                    Xác nhận đơn hàng
                                                 </MenuItem>
                                                 <MenuItem
                                                     disabled={item.orderStatus === "DELIVERED" || item.orderStatus === "SHIPPED"}
                                                     onClick={() => handleShippedOrder(item.id, index)}
                                                 >
-                                                    SHIPPED ORDER
+                                                    Đang giao hàng
                                                 </MenuItem>
                                                 <MenuItem onClick={() => handleDeliveredOrder(item.id)}>
-                                                    DELIVERED ORDER
+                                                   Đã giao hàng
                                                 </MenuItem>
                                             </Menu>
                                         </div>
@@ -209,7 +209,7 @@ const OrdersTable = () => {
                                             onClick={() => handleDeleteOrder(item.id)}
                                             variant="text"
                                         >
-                                            delete
+                                            Xóa
                                         </Button>
                                     </TableCell>
                                 </TableRow>

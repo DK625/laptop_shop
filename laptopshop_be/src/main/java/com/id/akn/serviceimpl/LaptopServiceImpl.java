@@ -53,7 +53,7 @@ public class LaptopServiceImpl implements LaptopService {
 
         Laptop laptop = new Laptop();
         laptop.setBrand(brandService.getBrandById(laptopDTO.getBrandId()));
-        
+
         if(laptopRepository.existsLaptopByModel(laptopDTO.getModel())){
             throw new LaptopException("Model Laptop is existed");
         }
@@ -104,8 +104,8 @@ public class LaptopServiceImpl implements LaptopService {
         Laptop savedLaptop = laptopRepository.save(laptop);
         System.out.println("BREAKPOINT2");
         for(LaptopColor lc : laptopColors){
-           lc.setLaptop(laptop);
-           laptopColorRepository.save(lc);
+            lc.setLaptop(laptop);
+            laptopColorRepository.save(lc);
         }
 
         return convertToDTO(savedLaptop);

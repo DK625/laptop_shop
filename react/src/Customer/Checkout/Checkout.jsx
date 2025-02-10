@@ -10,10 +10,10 @@ import {useLocation, useNavigate} from "react-router-dom";
 import OrderSummary from "./OrderSummary";
 
 const steps = [
-    "Login",
-    "Delivery Address",
-    "Order Summary",
-    "Payment",
+    "Đăng nhập",
+    "Chọn địa chỉ giao hàng và phương thức thanh toán",
+    "Tổng quan đơn hàng",
+    "Thanh toán",
 ];
 
 export default function Checkout() {

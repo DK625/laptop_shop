@@ -19,7 +19,7 @@ public interface LaptopService {
 	LaptopDTO saveLaptopImages(Integer laptopId, Set<MultipartFile> files) throws LaptopException, OsVersionException, BrandException, CpuException, IOException, ColorException;
 	LaptopDTO updateLaptop(Integer id, LaptopDTO laptopDTO) throws LaptopException, OsVersionException, BrandException, CpuException, IOException, ColorException;
 	void deleteLaptop(Integer id) throws LaptopException, IOException;
-	
+
 	List<LaptopDTO> searchLaptop(String query);
 	List<LaptopDTO> getTop10LaptopsByDiscount() ;
 

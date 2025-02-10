@@ -12,7 +12,7 @@ public interface OrderService {
 	Order createOrder(User user, OrderDTO orderDTO) throws CartItemException, UserException, LaptopException, ColorException;
 	Order findOrderById(Long orderId) throws OrderException;
 	//Order findOrderByOrderId(String orderId) throws OrderException;
-	Page<Order> userOrdersHistory(Long userId, Order.OrderStatus orderStatus, int page, int size);
+	Page<Order> userOrdersHistory(Long userId, Order.OrderStatus paymentStatus, int page, int size);
 	Order confirmedOrder(Long orderId) throws OrderException;
 	Order shippedOrder(Long orderId) throws OrderException;
 	Order deliveredOrder(Long orderId) throws OrderException;

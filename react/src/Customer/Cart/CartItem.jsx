@@ -10,18 +10,10 @@ const CartItem = ({ item, showButton }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
 
-    // const handleRemoveItemFromCart = () => {
-    //     const data = { cartItemId: item?.id, jwt };
-    //     dispatch(removeCartItem(data)).unwrap();
-    //     dispatch(getCart(jwt));
-
-    // };
     const handleRemoveItemFromCart = async () => {
         try {
             const data = { cartItemId: item?.id, jwt };
-            // Remove unwrap() since the action isn't created with createAsyncThunk
             await dispatch(removeCartItem(data));
-            // Fetch updated cart data after removal
             dispatch(getCart(jwt));
         } catch (error) {
             console.error("Error removing item:", error);

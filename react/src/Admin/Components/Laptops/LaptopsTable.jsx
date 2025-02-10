@@ -126,7 +126,7 @@ const LaptopsTable = () => {
       <ModelUpdate open={open} handleClose={handleClose} id={update} />
       <Card className="mt-2">
         <CardHeader
-          title="All Laptops"
+          title="Danh sách sản phẩm"
           sx={{
             pt: 2,
             alignItems: "center",
@@ -137,14 +137,14 @@ const LaptopsTable = () => {
           <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
             <TableHead>
               <TableRow>
-                <TableCell>Image</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Quantity</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Update</TableCell>
+                <TableCell></TableCell>
+                <TableCell>Mẫu laptop</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Hang mục</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Giá</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Số lượng</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Cập nhật</TableCell>
 
-                <TableCell sx={{ textAlign: "center" }}>Delete</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Xóa</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -192,17 +192,16 @@ const LaptopsTable = () => {
                       variant="text"
                       onClick={() => handleUpdate(item.id)}
                     >
-                      Update
+                      Cập nhật
                     </Button>
                   </TableCell>
                   <TableCell hidden={item.status === 0} sx={{ textAlign: "center" }}>
                     <Button
-
                       className={`${item.status === 0 ? "!hidden" : ""}`}
                       variant="text"
                       onClick={() => handleDeleteLaptop(item.id)}
                     >
-                      Delete
+                      Xóa
                     </Button>
                   </TableCell>
                 </TableRow>

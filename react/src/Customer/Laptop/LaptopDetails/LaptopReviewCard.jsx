@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar } from "@mui/material";
 import { Rating, Box, Typography, Grid } from "@mui/material";
 
-const LaptopReviewCard = ({item}) => {
+const LaptopReviewCard = ({ item }) => {
   const [value, setValue] = React.useState(4.5);
   return (
     <div className="">
@@ -12,22 +12,21 @@ const LaptopReviewCard = ({item}) => {
             <Avatar
               className="text-white"
               sx={{ width: 56, height: 56, bgcolor: "#9155FD" }}
-              alt={item.user.firstName}
+              alt={item.user.name}
               src=""
             >
-              {item.user.name.toUpperCase()}
+              {item.user.name.charAt(0).toUpperCase()}
             </Avatar>
           </Box>
         </Grid>
         <Grid item xs={9}>
           <div className="space-y-2">
             <div className="">
-              <p className="font-semibold text-lg">{item.user.firstName}</p>
-              <p className="opacity-70">{(new Date(item.createdAt).toLocaleDateString('vi-VN'))}</p>
+              <p className="font-semibold text-lg">
+                {item.user.name} ({new Date(item.createdAt).toLocaleDateString('vi-VN')})
+              </p>
             </div>
             <div>
-            
-
               <Rating
                 value={item.rating}
                 onChange={(event, newValue) => {
@@ -35,7 +34,6 @@ const LaptopReviewCard = ({item}) => {
                 }}
                 name="half-rating"
               />
-             
             </div>
             <p>
               {item.review}
@@ -47,5 +45,4 @@ const LaptopReviewCard = ({item}) => {
     </div>
   );
 };
-
 export default LaptopReviewCard;

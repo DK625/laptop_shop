@@ -111,7 +111,7 @@ export default function Navigation() {
     };
 
     return (
-        <div className="bg-white pb-10">
+        <div className="bg-white pb-6">
             {/* Mobile menu */}
             <Transition.Root show={open} as={Fragment}>
                 <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>
@@ -354,12 +354,12 @@ export default function Navigation() {
                                                 }}
                                             >{auth.user?.role === "ADMIN"&&
                                                 <MenuItem onClick={handleAdminClick}>
-                                                    Admin Dashboard
+                                                    Trang quản trị
                                                 </MenuItem>}
                                                 <MenuItem onClick={handleMyOrderClick}>
-                                                    My Orders
+                                                    Quản lý đơn hàng
                                                 </MenuItem>
-                                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                                <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                                             </Menu>
                                         </div>
                                     ) : (

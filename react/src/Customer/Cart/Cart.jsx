@@ -10,18 +10,34 @@ const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const jwt = localStorage.getItem("jwt");
-    console.log('cls-linh-jwt',jwt);
-    
+
     const { cart } = useSelector(store => store.cart);
     const [selectedItems, setSelectedItems] = useState([]);
 
-    console.log("Cart in component: ", cart);
+    // Tính toán lại tổng giá trị
+    const calculateTotalPrice = () => {
+        return selectedItems.reduce((total, itemId) => {
+            const item = cart.find((i) => i.id === itemId);
+            const itemPrice = item?.laptopPrice * (100 - item?.discountPercent) / 100 || 0;
+            return total + (itemPrice * item?.quantity); // Nhân giá với số lượng
+        }, 0);
+    };
+    const calculateTotalItem = () => {
+        return selectedItems.reduce((total, itemId) => {
+            const item = cart.find((i) => i.id === itemId);
+            return total + item?.quantity; 
+        }, 0);
+    };
+
+const [totalPrice, setTotalPrice] = useState(0);
+const [totalDiscount, setTotalDiscount] = useState(0); 
+const [totalItem, setTotalItem] = useState(0);
 
     // Lấy danh sách giỏ hàng khi component được mount
     useEffect(() => {
         dispatch(getCart(jwt));
-        if(!jwt){
-            navigate('/')
+        if (!jwt) {
+            navigate('/');
         }
     }, [jwt, dispatch]);
 
@@ -37,21 +53,40 @@ const Cart = () => {
     // Xử lý khi bấm nút Checkout
     const handleCheckout = () => {
         const itemsToCheckout = cart.filter((item) => selectedItems.includes(item.id));
-        console.log("Selected items for checkout:", itemsToCheckout);
-
-        // Cập nhật Redux với danh sách đã chọn
         dispatch(setSelectedCartItems(itemsToCheckout));
-
-        // Điều hướng sang bước tiếp theo
         navigate("/checkout?step=2");
     };
 
+    // Xử lý "Chọn tất cả"
+    const handleSelectAll = () => {
+        if (selectedItems.length === cart.length) {
+            setSelectedItems([]);
+        } else {
+            setSelectedItems(cart.map((item) => item.id));
+        }
+    };
+
+    // Cập nhật tổng giá trị khi số lượng hoặc sản phẩm thay đổi
+    useEffect(() => {
+        setTotalPrice(calculateTotalPrice());
+        setTotalItem(calculateTotalItem());
+    }, [selectedItems, cart]);
+
+    const totalQuantity = selectedItems.length;
+
     return (
-        <div className="">
+        <div>
             {cart?.length > 0 ? (
                 <div className="lg:grid grid-cols-3 lg:px-16 relative">
                     <div className="lg:col-span-2 lg:px-5 bg-white">
                         <div className="space-y-3">
+                            <div className="flex items-center space-x-4">
+                                <Checkbox
+                                    checked={selectedItems.length === cart.length}
+                                    onChange={handleSelectAll}
+                                />
+                                <span>Chọn tất cả</span>
+                            </div>
                             {cart.map((item) => (
                                 <div key={item.id} className="flex items-center space-x-4">
                                     <div className="shrink-0">
@@ -69,13 +104,25 @@ const Cart = () => {
                     </div>
                     <div className="px-5 sticky top-0 h-[100vh] mt-5 lg:mt-0">
                         <div className="border p-5 bg-white shadow-lg rounded-md">
-                            <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
-                            <hr />
                             <div className="space-y-3 font-semibold">
                                 <div className="flex justify-between">
-                                    <span>Delivery Charges</span>
-                                    <span className="text-green-700">Free</span>
+                                    <span>Số sản phẩm đã chọn</span>
+                                    <span>{totalQuantity}</span>
                                 </div>
+                                <div className="flex justify-between">
+                                    <span>Tổng số lượng sản phẩm </span>
+                                    <span>{totalItem}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Tổng giá trị</span>
+                                    <span className="font-bold text-xl">
+                                        {totalPrice.toLocaleString("vi-VN")} VND
+                                    </span>
+                                </div>
+                                {/* <div className="flex justify-between">
+                                    <span>Phí vận chuyển</span>
+                                    <span className="text-green-700">Miễn phí</span>
+                                </div> */}
                                 <hr />
                             </div>
 
@@ -86,12 +133,14 @@ const Cart = () => {
                                 sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
                                 disabled={selectedItems.length === 0}
                             >
-                                Check Out
+                                Mua hàng
                             </Button>
                         </div>
                     </div>
                 </div>
-            ):<div className="flex w-full justify-center">Không có sản phẩm nào trong giỏ hàng</div>}
+            ) : (
+                <div className="flex w-full justify-center">Không có sản phẩm nào trong giỏ hàng</div>
+            )}
         </div>
     );
 };
